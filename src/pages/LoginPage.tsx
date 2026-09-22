@@ -6,7 +6,7 @@ import { dashboardPathForRole, getUserRole } from '../lib/roles'
 import logo from '../assets/logo.svg'
 import './LoginPage.css'
 
-const MASCOT = '/images/playpanda-mascot.png'
+const MASCOT = '/images/login-mascot.png'
 
 function readOAuthCallbackError(): string | null {
   const params = new URLSearchParams(window.location.search)
