@@ -1,0 +1,32 @@
+.LegalPage { min-height: 100vh; background: var(--color-bg); }
+
+.LegalPage-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 6%;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.LegalPage-logo img { height: 40px; width: auto; display: block; }
+.LegalPage-back { font-size: 13px; font-weight: 600; color: var(--color-primary); }
+
+.LegalPage-article {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 60px 6% 100px;
+}
+
+.LegalPage-eyebrow { color: var(--color-primary); letter-spacing: 2px; font-size: 13px; margin-bottom: 10px; }
+.LegalPage-title { font-family: var(--font-heading); font-size: clamp(30px, 4vw, 42px); margin-bottom: 20px; }
+.LegalPage-intro { margin-bottom: 40px; font-size: 15px; }
+
+.LegalPage-section { margin-bottom: 32px; }
+.LegalPage-section h2 { font-family: var(--font-heading); font-size: 20px; margin-bottom: 12px; }
+.LegalPage-section p { font-size: 14px; line-height: 1.75; margin-bottom: 12px; }
+.LegalPage-section p:last-child { margin-bottom: 0; }
+
+@media (max-width: 600px) {
+  .LegalPage-header { padding: 16px 20px; }
+  .LegalPage-article { padding: 40px 20px 70px; }
+}

@@ -93,7 +93,8 @@ export default function LoginPage() {
           </button>
 
           <p className="LoginPage-terms">
-            By continuing, you agree to PlayPanda&apos;s Terms and Privacy Policy.
+            By continuing, you agree to PlayPanda&apos;s <Link to="/terms">Terms of Service</Link> and{' '}
+            <Link to="/privacy">Privacy Policy</Link>.
           </p>
 
           <p className="LoginPage-back">

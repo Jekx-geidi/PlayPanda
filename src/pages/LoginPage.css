@@ -74,6 +74,7 @@
 .LoginPage-googleBtn:disabled { opacity: 0.7; cursor: wait; }
 
 .LoginPage-terms { font-size: 11px; margin-top: 16px; opacity: 0.75; }
+.LoginPage-terms a { color: var(--color-primary); text-decoration: underline; }
 
 .LoginPage-back { font-size: 13px; margin-top: 20px; }
 .LoginPage-back a { color: var(--color-primary); font-weight: 600; }
