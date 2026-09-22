@@ -1,0 +1,46 @@
+.FinalCta { position: relative; overflow: hidden; padding: 110px 6%; background: var(--color-surface); border-block: 1px solid var(--color-border); }
+
+.FinalCta-decor { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.FinalCta-bracket { position: absolute; width: 90px; height: 140px; border: 3px solid var(--color-primary); opacity: 0.18; }
+.FinalCta-bracket--1 { top: 8%; right: 8%; border-right: 0; border-bottom: 0; }
+.FinalCta-bracket--2 { bottom: 6%; right: 22%; border-left: 0; border-top: 0; }
+.FinalCta-score { position: absolute; top: 12%; left: 4%; font-family: var(--font-heading); font-size: clamp(48px, 9vw, 120px); font-weight: 700; color: var(--color-primary); opacity: 0.06; letter-spacing: 4px; }
+.FinalCta-lines {
+  position: absolute;
+  bottom: -10%;
+  left: -5%;
+  width: 60%;
+  height: 220px;
+  background: repeating-linear-gradient(115deg, var(--color-primary) 0 2px, transparent 2px 26px);
+  opacity: 0.12;
+  transform: rotate(-4deg);
+}
+
+.FinalCta-row { position: relative; z-index: 1; max-width: 1200px; margin: auto; display: grid; grid-template-columns: 1.1fr 0.9fr; align-items: center; gap: 40px; }
+
+.FinalCta-eyebrow { color: var(--color-primary); letter-spacing: 2px; font-size: 14px; margin-bottom: 14px; }
+.FinalCta-title { font-family: var(--font-heading); font-size: clamp(30px, 4vw, 48px); margin-bottom: 20px; }
+.FinalCta-text { max-width: 460px; margin-bottom: 32px; }
+.FinalCta-actions { display: flex; flex-wrap: wrap; gap: 20px; }
+
+.FinalCta-media { display: flex; justify-content: center; }
+.FinalCta-media img {
+  width: 100%;
+  max-width: 480px;
+  height: auto;
+  aspect-ratio: 3888 / 2592;
+  object-fit: cover;
+  display: block;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-card);
+}
+
+@media(max-width: 900px) {
+  .FinalCta { padding: 70px 24px; text-align: center; }
+  .FinalCta-row { grid-template-columns: 1fr; gap: 32px; }
+  .FinalCta-text { margin-inline: auto; }
+  .FinalCta-actions { justify-content: center; }
+  .FinalCta-media { order: -1; }
+  .FinalCta-media img { max-width: 100%; }
+}

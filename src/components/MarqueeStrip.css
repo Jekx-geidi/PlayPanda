@@ -3,3 +3,8 @@
 .MarqueeStrip-item { display: inline-flex; align-items: center; gap: 30px; font-family: var(--font-heading); font-weight: 700; font-size: clamp(20px, 2.6vw, 34px); text-transform: uppercase; color: var(--color-primary); }
 .MarqueeStrip-sparkle { font-family: sans-serif; color: #b558e9; font-size: 30px; }
 @media(max-width: 700px) { .MarqueeStrip { padding: 26px 20px; } .MarqueeStrip-row { justify-content: center; gap: 16px; } .MarqueeStrip-item { font-size: 19px; gap: 16px; } }
+
+.MarqueeStrip--compact { background: var(--color-bg); padding: 22px 24px; }
+.MarqueeStrip--compact .MarqueeStrip-row { justify-content: center; gap: 16px; }
+.MarqueeStrip--compact .MarqueeStrip-item { font-size: 13px; gap: 14px; color: var(--color-text-secondary); }
+.MarqueeStrip--compact .MarqueeStrip-sparkle { font-size: 14px; }

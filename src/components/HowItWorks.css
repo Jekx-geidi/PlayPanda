@@ -1,0 +1,19 @@
+.HowItWorks { padding: 100px 6% 110px; text-align: center; scroll-margin-top: 32px; }
+.HowItWorks-eyebrow { color: var(--color-primary); letter-spacing: 2px; font-size: 14px; margin-bottom: 14px; }
+.HowItWorks-title { font-family: var(--font-heading); font-size: clamp(32px, 3.5vw, 44px); margin-bottom: 16px; }
+.HowItWorks-text { max-width: 480px; margin: 0 auto 64px; }
+
+.HowItWorks-steps { position: relative; max-width: 1100px; margin: 0 auto 56px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+.HowItWorks-steps::before { content: ''; position: absolute; top: 34px; left: 16%; right: 16%; height: 2px; background: var(--color-primary); opacity: 0.35; z-index: 0; }
+
+.HowItWorks-step { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; }
+.HowItWorks-number { display: grid; place-items: center; width: 68px; height: 68px; border-radius: 50%; background: var(--color-bg); border: 2px solid var(--color-primary); color: var(--color-primary); font-family: var(--font-heading); font-size: 22px; font-weight: 700; margin-bottom: 20px; }
+.HowItWorks-stepTitle { font-family: var(--font-heading); font-size: 20px; margin-bottom: 10px; }
+.HowItWorks-stepText { font-size: 13px; line-height: 1.7; max-width: 260px; }
+
+@media(max-width: 800px) {
+  .HowItWorks { padding: 60px 24px; }
+  .HowItWorks-text { margin-bottom: 40px; }
+  .HowItWorks-steps { grid-template-columns: 1fr; gap: 36px; }
+  .HowItWorks-steps::before { top: 34px; bottom: 34px; left: 50%; right: auto; width: 2px; height: auto; transform: translateX(-1px); }
+}

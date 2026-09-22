@@ -1,15 +1,20 @@
 import './MarqueeStrip.css'
 
-const ITEMS = ['Team Registration', 'Live Scoring', 'Real-Time Brackets']
+const DEFAULT_ITEMS = ['Team Registration', 'Live Scoring', 'Real-Time Brackets']
 
-export default function MarqueeStrip() {
+interface MarqueeStripProps {
+  items?: string[]
+  compact?: boolean
+}
+
+export default function MarqueeStrip({ items = DEFAULT_ITEMS, compact = false }: MarqueeStripProps) {
   return (
-    <div className="MarqueeStrip">
+    <div className={`MarqueeStrip${compact ? ' MarqueeStrip--compact' : ''}`}>
       <div className="MarqueeStrip-row">
-        {ITEMS.map((item, i) => (
+        {items.map((item, i) => (
           <span className="MarqueeStrip-item" key={item}>
             {item}
-            {i < ITEMS.length - 1 && <span className="MarqueeStrip-sparkle">✦</span>}
+            {i < items.length - 1 && <span className="MarqueeStrip-sparkle">✦</span>}
           </span>
         ))}
       </div>
