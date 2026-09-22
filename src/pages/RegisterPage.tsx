@@ -3,10 +3,12 @@ import { Link, useNavigate } from 'react-router-dom'
 import { FcGoogle } from 'react-icons/fc'
 import { useAuth } from '../context/AuthContext'
 import { dashboardPathForRole, getUserRole } from '../lib/roles'
+import { getUserAccount } from '../lib/account'
 import logo from '../assets/logo.svg'
 import './LoginPage.css'
+import './RegisterPage.css'
 
-const MASCOT = '/images/login-mascot.png'
+const MASCOT = '/images/Register.png'
 
 function readOAuthCallbackError(): string | null {
   const params = new URLSearchParams(window.location.search)
@@ -14,20 +16,17 @@ function readOAuthCallbackError(): string | null {
   return params.get('error_description') || hashParams.get('error_description') || null
 }
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const { session, loading, signingIn, error, signInWithGoogle, clearError } = useAuth()
   const navigate = useNavigate()
-  // Supabase's redirect-based OAuth flow can send the user back to /login
-  // with an error in the URL (e.g. they cancelled the Google consent
-  // screen) — that never touches the signInWithOAuth() promise, so it has
-  // to be read from the URL on mount instead of AuthContext's `error`.
   const [callbackError, setCallbackError] = useState<string | null>(null)
+  const [resolving, setResolving] = useState(false)
 
   useEffect(() => {
     const message = readOAuthCallbackError()
     if (message) {
       setCallbackError(message)
-      navigate('/login', { replace: true })
+      navigate('/register', { replace: true })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -35,9 +34,26 @@ export default function LoginPage() {
   useEffect(() => {
     if (loading || !session) return
     let cancelled = false
-    getUserRole(session).then((role) => {
-      if (!cancelled) navigate(dashboardPathForRole(role), { replace: true })
+    setResolving(true)
+
+    getUserRole(session).then(async (role) => {
+      if (cancelled) return
+      if (role) {
+        // Already an Admin/Scorer — no separate account to create.
+        navigate(dashboardPathForRole(role), { replace: true })
+        return
+      }
+      const account = await getUserAccount(session)
+      if (cancelled) return
+      if (account) {
+        // REG section 12: existing Google account, sign them in instead of
+        // creating a duplicate.
+        navigate('/', { replace: true })
+      } else {
+        navigate('/register/profile', { replace: true })
+      }
     })
+
     return () => {
       cancelled = true
     }
@@ -50,7 +66,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="LoginPage">
+    <div className="LoginPage RegisterPage">
       <div className="LoginPage-decor" aria-hidden="true">
         <span className="LoginPage-bracket LoginPage-bracket--1" />
         <span className="LoginPage-bracket LoginPage-bracket--2" />
@@ -58,24 +74,30 @@ export default function LoginPage() {
 
       <div className="LoginPage-row">
         <div className="LoginPage-brand">
-          <img src={MASCOT} alt="" className="LoginPage-mascot" width="1122" height="1402" />
-          <h1 className="LoginPage-brandTitle">Ready for the next match?</h1>
+          <img src={MASCOT} alt="" className="LoginPage-mascot" />
+          <p className="RegisterPage-eyebrow"># Join The Competition</p>
+          <h1 className="LoginPage-brandTitle">
+            Your Next Match
+            <br />
+            Starts Here.
+          </h1>
           <p className="LoginPage-brandText">
-            Sign in and manage the action from game start to final score.
+            Create your PlayPanda account to join tournaments, track matches, and stay connected
+            to the competition.
           </p>
         </div>
 
         <div className="LoginPage-card">
           <img src={logo} alt="PlayPanda" className="LoginPage-logo" />
 
-          <h2 className="LoginPage-heading">Welcome Back</h2>
+          <h2 className="LoginPage-heading">Create Your Account</h2>
           <p className="LoginPage-supporting">
-            Sign in to continue to your PlayPanda tournament dashboard.
+            Join PlayPanda and get ready for your next competition.
           </p>
 
           {displayError && (
             <div className="LoginPage-error" role="alert">
-              <p>We couldn&apos;t sign you in. Please try again.</p>
+              <p>We couldn&apos;t create your account. Please try again.</p>
               <button type="button" className="LoginPage-retry" onClick={dismissError}>
                 Try Again
               </button>
@@ -85,23 +107,24 @@ export default function LoginPage() {
           <button
             type="button"
             className="LoginPage-googleBtn"
-            onClick={() => signInWithGoogle()}
-            disabled={signingIn}
+            onClick={() => signInWithGoogle('/register')}
+            disabled={signingIn || resolving}
           >
             <FcGoogle aria-hidden="true" />
-            {signingIn ? 'Signing you in…' : 'Continue with Google'}
+            {signingIn
+              ? 'Connecting to Google…'
+              : resolving
+                ? 'Setting up your account…'
+                : 'Continue with Google'}
           </button>
 
           <p className="LoginPage-terms">
-            By continuing, you agree to PlayPanda&apos;s <Link to="/terms">Terms of Service</Link> and{' '}
-            <Link to="/privacy">Privacy Policy</Link>.
+            By continuing, you agree to PlayPanda&apos;s <Link to="/terms">Terms of Service</Link>{' '}
+            and <Link to="/privacy">Privacy Policy</Link>.
           </p>
 
           <p className="LoginPage-back">
-            New to PlayPanda? <Link to="/register">Create an Account</Link>
-          </p>
-          <p className="LoginPage-back">
-            Not here to manage a tournament? <Link to="/">Back to Home</Link>
+            Already have an account? <Link to="/login">Log In</Link>
           </p>
         </div>
       </div>

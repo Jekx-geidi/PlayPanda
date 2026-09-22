@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { FaSearch, FaBars, FaCircle, FaUser } from 'react-icons/fa'
+import { FaSearch, FaBars, FaUser } from 'react-icons/fa'
 import logo from '../assets/logo.svg'
 import './Header.css'
 
@@ -39,10 +39,9 @@ export default function Header() {
           <Link to="/login" className="Header-iconBtn" aria-label="Login">
             <FaUser />
           </Link>
-          <button type="button" className="Header-pill">
-            <FaCircle className="Header-pill-dot" />
-            Live Scores
-          </button>
+          <Link to="/register" className="Header-pill">
+            Register
+          </Link>
           <button
             type="button"
             className="Header-iconBtn Header-menuToggle"

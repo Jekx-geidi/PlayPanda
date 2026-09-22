@@ -1,4 +1,5 @@
-// Hand-authored to match supabase/migrations/0001_create_profiles.sql.
+// Hand-authored to match supabase/migrations/0001_create_profiles.sql and
+// supabase/migrations/0002_create_user_accounts.sql.
 // Regenerate for real once the migration is applied:
 //   supabase gen types typescript --project-id hvwamoinowdwqscubeyv > src/lib/database.types.ts
 export type Database = {
@@ -21,6 +22,30 @@ export type Database = {
           id?: string
           email?: string
           role?: 'admin' | 'scorer'
+          created_at?: string
+        }
+        Relationships: []
+      }
+      user_accounts: {
+        Row: {
+          id: string
+          display_name: string
+          user_type: 'player' | 'team_representative' | 'tournament_organizer' | 'spectator'
+          terms_accepted_at: string
+          created_at: string
+        }
+        Insert: {
+          id: string
+          display_name: string
+          user_type: 'player' | 'team_representative' | 'tournament_organizer' | 'spectator'
+          terms_accepted_at: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          display_name?: string
+          user_type?: 'player' | 'team_representative' | 'tournament_organizer' | 'spectator'
+          terms_accepted_at?: string
           created_at?: string
         }
         Relationships: []

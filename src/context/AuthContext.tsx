@@ -7,7 +7,7 @@ interface AuthContextValue {
   loading: boolean
   signingIn: boolean
   error: string | null
-  signInWithGoogle: () => Promise<void>
+  signInWithGoogle: (redirectPath?: string) => Promise<void>
   signOut: () => Promise<void>
   clearError: () => void
 }
@@ -33,12 +33,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => listener.subscription.unsubscribe()
   }, [])
 
-  const signInWithGoogle = async () => {
+  const signInWithGoogle = async (redirectPath = '/login') => {
     setError(null)
     setSigningIn(true)
     const { error: signInError } = await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: `${window.location.origin}/login` },
+      options: { redirectTo: `${window.location.origin}${redirectPath}` },
     })
     if (signInError) {
       setError(signInError.message)

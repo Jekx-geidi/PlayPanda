@@ -1,6 +1,7 @@
-# Plan: PlayPanda Login Page (identity-auth slice)
+# Plan: PlayPanda Login + Register Pages (identity-auth slice)
 
-Source: `../../PLAYPANDA_LOGIN_PAGE.md` (copied to `docs/PLAYPANDA_LOGIN_PAGE.md`).
+Source: `../../PLAYPANDA_LOGIN_PAGE.md` (copied to `docs/PLAYPANDA_LOGIN_PAGE.md`) and
+`../../PLAYPANDA_REGISTER_PAGE.md`.
 
 External dependencies not completable from code (need the human — none of these
 are code problems, all code is written and waiting on them):
@@ -16,6 +17,16 @@ are code problems, all code is written and waiting on them):
   directly instead of copy-paste SQL/dashboard steps.
 - Configure custom SMTP in Supabase Dashboard → Authentication → Emails →
   SMTP Settings, once `SMTP_HOST`/`SMTP_USER` are filled in `.env.local`.
+- Apply `supabase/migrations/0002_create_user_accounts.sql` (new — the
+  public-registration profile table for standard users).
+
+Update 2026-09-22: verified live that Google's real consent screen now loads
+from `/register` (previously it hit Supabase's `provider is not enabled`
+error) — the Google provider has been enabled in the dashboard since the
+identity-auth slice above was written. Registering a brand-new account and
+completing profile setup end-to-end is still unverified (needs a real Google
+account + the 0002 migration applied) — everything else was confirmed by
+test/design.
 
 ## Tasks
 
@@ -33,9 +44,23 @@ are code problems, all code is written and waiting on them):
 - [x] Task 4: Auth error states
   - "Google Login Failed" / Try Again (Task 1), plus the OAuth-callback-error case discovered by testing live (Supabase redirects back to `/login` with `error_description` in the URL when the user cancels/fails at Google — that never touches the `signInWithOAuth` promise, so it's parsed from the URL separately). Scorer "no assigned matches" copy is stubbed as ScorerPage's static placeholder text; real per-scorer assignment data is out of scope until match/scoring features exist.
 
+- [x] Task 5: Registration page (standard user flow, PLAYPANDA_REGISTER_PAGE.md MVP scope)
+  - `/register`: Google sign-up (same OAuth flow as login, redirects back to `/register`). On return, checks `profiles` first (existing Admin/Scorer signs straight into their dashboard), then `user_accounts` (existing normal account signs straight in to `/`, no duplicate created — REG section 12), otherwise sends brand-new accounts to `/register/profile`.
+  - `/register/profile`: profile setup form — display name (auto-filled from the Google profile once the session loads), read-only email, `user_type` radio group (Player / Team Representative / Tournament Organizer / Spectator — **no** Admin/Scorer self-selection, matching REG-FR-009/010), required Terms checkbox, inline validation. Guarded: no session → `/register`. On submit, inserts into the new `user_accounts` table and redirects to `/`.
+  - New `supabase/migrations/0002_create_user_accounts.sql`: a table separate from `profiles` on purpose — `user_type` here is display/business metadata only and carries no authorization meaning (REG section 35), unlike `profiles.role`. RLS: select/insert/update own row only, `WITH CHECK (auth.uid() = id)` on both insert and update.
+  - `src/lib/account.ts` (new): `getUserAccount`/`createUserAccount`, mirrors `roles.ts`'s pattern.
+  - `AuthContext.signInWithGoogle` now takes an optional `redirectPath` (defaults to `/login`) so Register can send the OAuth redirect back to `/register` instead. Login and Register cross-link ("New to PlayPanda? Create an Account" / "Already have an account? Log In").
+  - Header's "Live Scores" pill replaced with a "Register" link (user request) — no live-scoring feature exists yet to justify that pill, and Register is a real, reachable page now.
+  - 9 new unit tests (mocked Supabase, table-aware `.from()` mock) covering: rendering, sign-up error + retry, callback error, all three post-Google destinations (Admin/Scorer dashboard, existing user_account → home, new account → profile setup), profile pre-fill, terms-required validation, and successful account creation. All 18 tests pass; build clean. Live-verified: `/register` renders per spec, `/register/profile` redirects to `/register` when logged out, and clicking "Continue with Google" reaches the real Google consent screen (confirming the provider really is enabled now).
+  - **Explicitly out of scope** (not part of this task, bigger feature on their own): invitation-based Scorer/Admin registration (REG sections 20-23) — needs an invitation-token table, an Admin "Invite" UI, and email delivery (blocked on SMTP anyway); duplicate-email edge cases beyond "Google identity already has a `user_accounts` row"; a real `/dashboard` or `/tournaments` destination (redirects to `/` for now since neither page exists yet).
+
 ## Next slice (not started)
 
 Everything above is code-complete and either live-verified or unit-tested against
-what's reachable without the two blockers. Once Google auth + the migration are
-live, the next real task is verifying an actual Admin and Scorer login end-to-end,
-then moving on to the `tournament-config` module from the original capability map.
+what's reachable without the remaining blockers (the Google provider is now
+confirmed live; the 0001 and 0002 migrations still need to be applied, and an
+admin row still needs seeding). Once those are done, the next real task is
+verifying an actual Admin/Scorer login and a full Register → Profile Setup →
+Home flow end-to-end with a real Google account, then moving on to either
+`tournament-config` from the original capability map or the invitation-based
+Scorer/Admin registration flow flagged above.
