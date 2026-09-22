@@ -1,0 +1,63 @@
+/*
+  PlayPanda design tokens — "Dark Pulse Sports" palette.
+  High-energy dark theme chosen for a combined Sports + E-Sports platform.
+  Semantic names are what components should reference; raw --color-* values
+  are the palette itself and should rarely be used directly.
+*/
+
+:root {
+  /* Raw palette */
+  --palette-bg: #080d0b;
+  --palette-surface: #14211c;
+  --palette-surface-alt: #192821;
+  --palette-primary: #3fd285;
+  --palette-primary-hover: #52e99a;
+  --palette-accent: #3b82f6;
+  --palette-danger: #ef4444;
+  --palette-success: #22c55e;
+  --palette-warning: #f59e0b;
+  --palette-text-primary: #f9fafb;
+  --palette-text-secondary: #a6b0ac;
+  --palette-border: #26352f;
+
+  /* Semantic tokens — reference these in components */
+  --color-bg: var(--palette-bg);
+  --color-surface: var(--palette-surface);
+  --color-surface-alt: var(--palette-surface-alt);
+  --color-border: var(--palette-border);
+
+  --color-primary: var(--palette-primary);
+  --color-primary-hover: var(--palette-primary-hover);
+  --color-accent: var(--palette-accent);
+
+  --color-success: var(--palette-success);
+  --color-warning: var(--palette-warning);
+  --color-danger: var(--palette-danger);
+
+  /* Match-status shorthands (BRD §16 lifecycle) */
+  --color-status-live: var(--palette-success);
+  --color-status-pending: var(--palette-warning);
+  --color-status-cancelled: var(--palette-danger);
+  --color-status-final: var(--palette-accent);
+
+  --color-text-primary: var(--palette-text-primary);
+  --color-text-secondary: var(--palette-text-secondary);
+
+  --color-bg-alt: #0d1713;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+
+  --shadow-card: 0 2px 8px hsla(0, 0%, 0%, 0.4);
+
+  /* Elongated-hexagon "ticket" shape used for primary CTA buttons */
+  --clip-hex: polygon(
+    16px 0,
+    calc(100% - 16px) 0,
+    100% 50%,
+    calc(100% - 16px) 100%,
+    16px 100%,
+    0 50%
+  );
+}

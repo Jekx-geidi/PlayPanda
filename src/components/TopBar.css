@@ -1,0 +1,53 @@
+.TopBar {
+  position: relative;
+  z-index: 3;
+  background: var(--color-bg-alt);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.TopBar-row {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding: 8px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.8rem;
+}
+
+.TopBar-message {
+  color: var(--color-text-secondary);
+}
+
+.TopBar-brand {
+  color: var(--color-success);
+  font-weight: 700;
+}
+
+.TopBar-social {
+  display: flex;
+  gap: 14px;
+}
+
+.TopBar-social a {
+  color: var(--color-text-secondary);
+  transition: color 150ms ease;
+}
+
+.TopBar-social a:hover {
+  color: var(--color-accent);
+}
+
+@media (max-width: 640px) {
+  .TopBar-message {
+    display: none;
+  }
+
+  .TopBar-row {
+    justify-content: flex-end;
+  }
+}
+
+.TopBar { background: #0b1013; border-bottom: 0; }
+.TopBar-row { padding-block: 10px; font-size: 12px; }
+.TopBar-brand { color: var(--color-primary); }

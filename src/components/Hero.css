@@ -1,0 +1,10 @@
+.Hero { position: relative; min-height: 610px; padding: 205px 24px 150px; text-align: center; background-size: cover; background-position: center 48%; }
+.Hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, #080d0beb, #080d0bcc 50%, #080d0b); }
+.Hero-content { position: relative; max-width: 1050px; margin: auto; z-index: 1; }
+.Hero-frame { position: relative; margin-bottom: 30px; }
+.Hero-frame::before { content: ''; position: absolute; z-index: -1; width: 86%; height: 86px; top: 32px; left: 7%; border: 1px solid #ffffff20; border-radius: 100px; box-shadow: 0 0 0 3px #080d0b, 0 0 0 4px #ffffff20, 0 0 0 7px #080d0b, 0 0 0 8px #ffffff20, 0 0 0 11px #080d0b, 0 0 0 12px #ffffff20; }
+.Hero-eyebrow { color: var(--color-primary); letter-spacing: 1px; font-size: 15px; margin-bottom: 14px; }
+.Hero-title { font-family: var(--font-heading); font-size: clamp(38px, 5.4vw, 76px); font-weight: 700; line-height: 1.22; }
+.Hero-title-accent { color: var(--color-primary); display: inline-block; margin-top: 8px; }
+.Hero-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 24px; }
+@media(max-width: 600px) { .Hero { min-height: 560px; padding: 175px 18px 125px; } .Hero-eyebrow { font-size: 11px; } .Hero-frame::before { height: 100px; top: 34px; } .Hero-title { font-size: clamp(32px, 8vw, 46px); } .Hero-actions { gap: 10px; } }

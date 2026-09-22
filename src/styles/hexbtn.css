@@ -1,0 +1,45 @@
+/* Elongated-hexagon "ticket" CTA button, reused across Hero / JoinBanner. */
+.HexBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: none;
+  cursor: pointer;
+  clip-path: var(--clip-hex);
+  padding: 14px 30px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: filter 150ms ease;
+}
+
+.HexBtn:hover {
+  filter: brightness(1.1);
+}
+
+.HexBtn--primary {
+  background: var(--color-success);
+  color: #06210f;
+}
+
+.HexBtn--secondary {
+  background: var(--color-warning);
+  color: #2b1a02;
+}
+
+.HexBtn--ghost {
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  clip-path: none;
+  border-radius: var(--radius-md);
+}
+
+.HexBtn { position: relative; font-family: var(--font-heading); font-size: 14px; padding: 14px 30px; min-height: 44px; }
+.HexBtn::before { content: ''; position: absolute; inset: 4px; border: 1px solid currentColor; clip-path: var(--clip-hex); opacity: .65; pointer-events: none; }
+.HexBtn--primary { background: var(--color-primary); }
+.HexBtn--secondary { background: #f4c542; }
+.HexBtn--outline { color: white; background: var(--color-primary); isolation: isolate; }
+.HexBtn--outline::before { background: #080d0b; inset: 2px 16px; opacity: 1; z-index: -1; border: 0; }
+@media(max-width: 600px) { .HexBtn { padding: 13px 23px; font-size: 12px; } }
