@@ -1,14 +1,27 @@
 import type { Session } from '@supabase/supabase-js'
+import { supabase } from './supabase'
 
 export type PlayPandaRole = 'admin' | 'scorer' | null
 
 /**
- * TODO(task 2): look this up against a `profiles` table (id/email -> role)
- * once it exists. Until then every authenticated user is "unknown", which
- * routes them to /unauthorized per the login spec's MVP flow.
+ * Looks up the caller's role from the `profiles` table (see
+ * supabase/migrations/0001_create_profiles.sql). No matching row means no
+ * PlayPanda access — that's the intended behavior (BR-008/BR-009: Google
+ * auth alone never grants Admin/Scorer access), not an error.
  */
-export async function getUserRole(_session: Session): Promise<PlayPandaRole> {
-  return null
+export async function getUserRole(session: Session): Promise<PlayPandaRole> {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', session.user.id)
+    .maybeSingle()
+
+  if (error) {
+    console.error('Failed to look up PlayPanda role', error)
+    return null
+  }
+
+  return data?.role ?? null
 }
 
 export function dashboardPathForRole(role: PlayPandaRole): string {
