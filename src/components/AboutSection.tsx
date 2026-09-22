@@ -1,7 +1,8 @@
 import { FaSlidersH, FaTrophy, FaHeadset } from 'react-icons/fa'
 import './AboutSection.css'
 
-const IMAGE = '/images/tournament.jpg'
+const IMAGE =
+  'https://media.istockphoto.com/id/2187013184/photo/celebrating-fitness-friends-sharing-joyful-highfives-after-completing-their-workout-session.jpg?b=1&s=612x612&w=0&k=20&c=pkvYmd7sAQ_gqAsIsqubPqnkApanZea5E8p-AHHdrx4='
 
 const FEATURES = [
   {
@@ -26,7 +27,14 @@ export default function AboutSection() {
     <section className="AboutSection" id="about">
       <div className="AboutSection-row">
         <div className="AboutSection-media">
-          <img src={IMAGE} alt="Tennis rackets and balls beside a court net" loading="lazy" className="AboutSection-image" />
+          <img
+            src={IMAGE}
+            alt="Teammates high-fiving after a match"
+            width="612"
+            height="408"
+            loading="lazy"
+            className="AboutSection-image"
+          />
         </div>
 
         <div className="AboutSection-content">
