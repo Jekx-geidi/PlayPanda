@@ -15,8 +15,10 @@
 
 create table if not exists public.user_accounts (
   id uuid primary key references auth.users (id) on delete cascade,
+  full_name text not null check (char_length(full_name) between 2 and 100),
   display_name text not null check (char_length(display_name) between 2 and 40),
   user_type text not null check (user_type in ('player', 'team_representative', 'tournament_organizer', 'spectator')),
+  contact_number text,
   terms_accepted_at timestamptz not null,
   created_at timestamptz not null default now()
 );

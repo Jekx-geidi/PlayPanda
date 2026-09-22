@@ -29,22 +29,28 @@ export type Database = {
       user_accounts: {
         Row: {
           id: string
+          full_name: string
           display_name: string
           user_type: 'player' | 'team_representative' | 'tournament_organizer' | 'spectator'
+          contact_number: string | null
           terms_accepted_at: string
           created_at: string
         }
         Insert: {
           id: string
+          full_name: string
           display_name: string
           user_type: 'player' | 'team_representative' | 'tournament_organizer' | 'spectator'
+          contact_number?: string | null
           terms_accepted_at: string
           created_at?: string
         }
         Update: {
           id?: string
+          full_name?: string
           display_name?: string
           user_type?: 'player' | 'team_representative' | 'tournament_organizer' | 'spectator'
+          contact_number?: string | null
           terms_accepted_at?: string
           created_at?: string
         }

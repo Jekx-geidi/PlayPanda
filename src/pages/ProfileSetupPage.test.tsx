@@ -55,11 +55,12 @@ describe('ProfileSetupPage', () => {
     expect(await screen.findByText('Register Page')).toBeInTheDocument()
   })
 
-  it('pre-fills the display name from Google and shows the read-only email', async () => {
+  it('pre-fills full name and display name from Google and shows the read-only email', async () => {
     getSession.mockReset().mockResolvedValue({ data: { session: fakeSession } })
     renderProfileSetup()
 
-    expect(await screen.findByLabelText(/display name/i)).toHaveValue('Riel Jake')
+    expect(await screen.findByLabelText(/full name/i)).toHaveValue('Riel Jake')
+    expect(screen.getByLabelText(/display name/i)).toHaveValue('Riel Jake')
     expect(screen.getByText('new@example.com')).toBeInTheDocument()
   })
 
@@ -77,7 +78,7 @@ describe('ProfileSetupPage', () => {
     expect(insert).not.toHaveBeenCalled()
   })
 
-  it('creates the account and redirects home on successful submission', async () => {
+  it('creates the account (contact number optional) and redirects home on successful submission', async () => {
     getSession.mockReset().mockResolvedValue({ data: { session: fakeSession } })
     const user = userEvent.setup()
     renderProfileSetup()
@@ -90,8 +91,10 @@ describe('ProfileSetupPage', () => {
       expect(insert).toHaveBeenCalledWith(
         expect.objectContaining({
           id: 'user-1',
+          full_name: 'Riel Jake',
           display_name: 'Riel Jake',
           user_type: 'team_representative',
+          contact_number: null,
         })
       )
     )

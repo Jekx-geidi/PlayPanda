@@ -17,7 +17,9 @@
 .ProfileSetupPage-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
 .ProfileSetupPage-email { font-size: 13px; opacity: 0.75; }
 
-.ProfileSetupPage-label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+.ProfileSetupPage-label { display: block; font-size: 13px; font-weight: 700; margin-top: 16px; margin-bottom: 6px; }
+.ProfileSetupPage-label:first-of-type { margin-top: 0; }
+.ProfileSetupPage-optional { font-weight: 400; opacity: 0.6; text-transform: none; }
 
 .ProfileSetupPage-input {
   width: 100%;

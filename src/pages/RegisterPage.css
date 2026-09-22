@@ -1,1 +1,18 @@
 .RegisterPage-eyebrow { color: var(--color-primary); letter-spacing: 2px; font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+
+.RegisterPage.LoginPage { align-items: flex-start; padding-top: 56px; padding-bottom: 56px; }
+.RegisterPage .LoginPage-row { align-items: start; }
+.RegisterPage-row--single { max-width: 480px; margin-inline: auto; }
+
+.RegisterPage-card { max-width: 480px; }
+.RegisterPage-form .ProfileSetupPage-input:first-of-type { margin-top: 0; }
+
+.RegisterPage-divider { display: flex; align-items: center; gap: 12px; margin: 22px 0; opacity: 0.6; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+.RegisterPage-divider::before,
+.RegisterPage-divider::after { content: ''; flex: 1; height: 1px; background: var(--color-border); }
+
+.RegisterPage-resolving { text-align: center; padding: 24px 0; opacity: 0.8; }
+
+@media (max-width: 860px) {
+  .RegisterPage-card { max-width: none; }
+}
