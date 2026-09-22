@@ -1,14 +1,15 @@
 import { useState } from 'react'
-import { FaSearch, FaBars, FaCircle } from 'react-icons/fa'
+import { Link } from 'react-router-dom'
+import { FaSearch, FaBars, FaCircle, FaUser } from 'react-icons/fa'
 import logo from '../assets/logo.svg'
 import './Header.css'
 
 const NAV_LINKS = [
-  { label: 'Home', href: '#' },
+  { label: 'Home', href: '/' },
   { label: 'About Us', href: '#about' },
   { label: 'Tournaments', href: '#tournaments' },
-  { label: 'Sports', href: '#' },
-  { label: 'E-Sports', href: '#' },
+  { label: 'Sports', href: '#sports' },
+  { label: 'E-Sports', href: '#sports' },
   { label: 'Contact', href: '#' },
 ]
 
@@ -36,6 +37,9 @@ export default function Header() {
           <button type="button" className="Header-iconBtn" aria-label="Search">
             <FaSearch />
           </button>
+          <Link to="/login" className="Header-iconBtn" aria-label="Login">
+            <FaUser />
+          </Link>
           <button type="button" className="Header-pill">
             <FaCircle className="Header-pill-dot" />
             Live Scores

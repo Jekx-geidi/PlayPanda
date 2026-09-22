@@ -1,24 +1,25 @@
-import TopBar from './components/TopBar'
-import Header from './components/Header'
-import Hero from './components/Hero'
-import JoinBanner from './components/JoinBanner'
-import MarqueeStrip from './components/MarqueeStrip'
-import AboutSection from './components/AboutSection'
+import { Routes, Route } from 'react-router-dom'
+import { AuthProvider } from './context/AuthContext'
+import MarketingLayout from './layouts/MarketingLayout'
+import HomePage from './pages/HomePage'
+import LoginPage from './pages/LoginPage'
+import AdminPage from './pages/AdminPage'
+import ScorerPage from './pages/ScorerPage'
+import UnauthorizedPage from './pages/UnauthorizedPage'
 
 function App() {
   return (
-    <>
-      <div className="SiteChrome">
-        <TopBar />
-        <Header />
-      </div>
-      <main id="main-content">
-      <Hero />
-      <JoinBanner />
-      <MarqueeStrip />
-      <AboutSection />
-      </main>
-    </>
+    <AuthProvider>
+      <Routes>
+        <Route element={<MarketingLayout />}>
+          <Route path="/" element={<HomePage />} />
+        </Route>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/admin" element={<AdminPage />} />
+        <Route path="/scorer" element={<ScorerPage />} />
+        <Route path="/unauthorized" element={<UnauthorizedPage />} />
+      </Routes>
+    </AuthProvider>
   )
 }
 
