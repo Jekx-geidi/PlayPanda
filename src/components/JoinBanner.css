@@ -1,12 +1,20 @@
-.JoinBanner { position: relative; z-index: 2; margin-top: -175px; padding: 0 3% 0; overflow-x: clip; scroll-margin-top: 24px; }
-.JoinBanner-box { position: relative; max-width: 1320px; margin: auto; aspect-ratio: 7103 / 2984; }
-/* The supplied panel is centered at 43.4% of the image; its paddle extends right. */
-.JoinBanner-art { display: block; width: 100%; height: auto; margin-left: 6.6%; }
-.JoinBanner-content { position: absolute; top: 49%; left: 50%; transform: translateX(-50%); width: 24%; text-align: center; }
-.JoinBanner-title { font-family: var(--font-heading); font-size: clamp(24px, 3vw, 40px); margin-bottom: 18px; }
-.JoinBanner-text { font-size: clamp(12px, 1.2vw, 16px); line-height: 1.75; margin-bottom: 24px; }
-.JoinBanner-dots { position: absolute; bottom: 1%; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 15px; }
+.JoinBanner { position: relative; z-index: 2; margin-top: -175px; padding: 0 3%; overflow-x: clip; scroll-margin-top: 24px; }
+.JoinBanner-box { position: relative; display: grid; max-width: 1320px; margin: auto; }
+/* Share a grid cell so the content reserves space instead of overflowing the artwork. */
+.JoinBanner-art { grid-area: 1 / 1; align-self: end; display: block; width: 100%; height: auto; margin-left: 6.6%; }
+.JoinBanner-content { grid-area: 1 / 1; position: relative; align-self: end; justify-self: center; display: flex; flex-direction: column; align-items: center; gap: 16px; width: 28%; padding: 80px 0 48px; text-align: center; }
+.JoinBanner-mascot { display: flex; justify-content: center; flex-shrink: 0; }
+.JoinBanner-title { font-family: var(--font-heading); font-size: clamp(28px, 2.6vw, 36px); text-wrap: balance; }
+.JoinBanner-text { max-width: 30ch; font-size: 14px; line-height: 1.65; margin: 0; }
+.JoinBanner-content .HexBtn { flex-shrink: 0; white-space: nowrap; }
+.JoinBanner-dots { position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 15px; }
 .JoinBanner-dots span { width: 7px; height: 7px; border-radius: 50%; background: var(--color-primary); }
 .JoinBanner-dots .is-active { outline: 1px solid var(--color-primary); outline-offset: 4px; }
-@media(max-width: 1100px) and (min-width: 901px) { .JoinBanner-title { margin-bottom: 10px; font-size: 24px; } .JoinBanner-text { margin-bottom: 12px; font-size: 12px; } .JoinBanner-content { top: 46%; } }
-@media(max-width: 900px) { .JoinBanner { margin-top: -70px; padding: 0 16px; } .JoinBanner-box { aspect-ratio: auto; } .JoinBanner-content { position: relative; left: auto; top: auto; transform: none; width: 100%; padding: 24px 20px 40px; background: var(--color-surface); border: 1px solid var(--color-border); border-top: 0; } .JoinBanner-title { font-size: 30px; } .JoinBanner-text { font-size: 14px; max-width: 380px; margin-inline: auto; } .JoinBanner-dots { left: 50%; transform: translateX(-50%); bottom: 16px; } }
+@media (max-width: 1100px) {
+  .JoinBanner { margin-top: -70px; padding: 0 16px; }
+  .JoinBanner-box { display: block; }
+  .JoinBanner-content { width: 100%; padding: 24px 20px 48px; background: var(--color-surface); border: 1px solid var(--color-border); border-top: 0; }
+  .JoinBanner-title { font-size: clamp(26px, 4vw, 32px); }
+  .JoinBanner-text { max-width: 380px; }
+  .JoinBanner-dots { bottom: 16px; }
+}

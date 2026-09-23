@@ -1,0 +1,14 @@
+.PlayPandaMascot { width: var(--mascot-size); max-width: 100%; aspect-ratio: 1; perspective: 700px; }
+.PlayPandaMascot--inline { display: inline-block; }
+.PlayPandaMascot-face { width: 100%; height: 100%; transform-origin: 50% 80%; }
+.PlayPandaMascot-poke { display: block; width: 100%; padding: 0; border: 0; background: none; border-radius: var(--radius-lg); cursor: pointer; }
+.PlayPandaMascot-poke:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 5px; }
+.PlayPandaMascot-reaction { display: block; }
+.PlayPandaMascot-crop { position: relative; display: block; width: 100%; aspect-ratio: 1; overflow: hidden; border-radius: var(--radius-lg); }
+.PlayPandaMascot-crop img { position: absolute; width: 600%; max-width: none; height: 300%; left: -100%; top: 0; user-select: none; pointer-events: none; }
+.PlayPandaMascot-crop--happy img { left: -300%; }
+.PlayPandaMascot-crop--surprised img { left: -300%; top: -100%; }
+.PlayPandaMascot.LoginPage-mascot { width: var(--mascot-size); }
+@media (prefers-reduced-motion: reduce) {
+  .PlayPandaMascot-face, .PlayPandaMascot-reaction { transform: none !important; animation: none !important; }
+}

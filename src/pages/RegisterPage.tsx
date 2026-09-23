@@ -5,12 +5,12 @@ import { useAuth } from '../context/AuthContext'
 import { dashboardPathForRole, getUserRole } from '../lib/roles'
 import { createUserAccount, getUserAccount } from '../lib/account'
 import { USER_TYPES, type UserType } from '../lib/userTypes'
+import { PlayPandaMascot } from '../components/mascot/PlayPandaMascot'
+import { useMascotTargets } from '../components/mascot/useMascotTargets'
 import logo from '../assets/logo.svg'
 import './LoginPage.css'
 import './ProfileSetupPage.css'
 import './RegisterPage.css'
-
-const MASCOT = '/images/Register.png'
 
 function readOAuthCallbackError(): string | null {
   const params = new URLSearchParams(window.location.search)
@@ -22,6 +22,7 @@ export default function RegisterPage() {
   const { session, loading, signingIn, signingUp, error, signInWithGoogle, signUpWithEmail, clearError } =
     useAuth()
   const navigate = useNavigate()
+  const { mascot, targetEvents } = useMascotTargets()
 
   const [callbackError, setCallbackError] = useState<string | null>(null)
   const [resolving, setResolving] = useState(false)
@@ -168,7 +169,7 @@ export default function RegisterPage() {
 
       <div className="LoginPage-row">
         <div className="LoginPage-brand">
-          <img src={MASCOT} alt="" className="LoginPage-mascot" />
+          <PlayPandaMascot ref={mascot} className="LoginPage-mascot" expression={session ? 'happy' : 'normal'} />
           <p className="RegisterPage-eyebrow"># Join The Competition</p>
           <h1 className="LoginPage-brandTitle">
             Your Next Match
@@ -181,7 +182,7 @@ export default function RegisterPage() {
           </p>
         </div>
 
-        <div className="LoginPage-card RegisterPage-card">
+        <div className="LoginPage-card RegisterPage-card" {...targetEvents}>
           <img src={logo} alt="PlayPanda" className="LoginPage-logo" />
 
           <h2 className="LoginPage-heading">Create Your Account</h2>
