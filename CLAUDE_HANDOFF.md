@@ -95,6 +95,13 @@ accessible filters and a truthful empty state; `src/lib/leaderboards.ts` provide
 deterministic ranking/tie-break helpers with tests. It has no persisted rows,
 recalculation job, publish/lock workflow, or admin configuration yet.
 
+The pasted social-layer proposal is preserved in
+`docs/specifications/Player_Profile_Social_Proposal.md`. A first public shell
+now exists at `/players` and `/player/:username`: discover filters, profile tabs,
+follow/challenge placeholders, and privacy-aware unpublished state. It does not
+query or invent player data; profile, follow, challenge, privacy and achievement
+tables remain future work.
+
 - React 19 / TypeScript / Vite; React Router; Supabase client; Vitest.
 - `/`: marketing page. `/tournaments`, `/tournaments/:id`: public browse.
 - `/login`: email/password, Create Account mode, Google. `/register`:

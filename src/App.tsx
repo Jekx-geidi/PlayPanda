@@ -17,6 +17,8 @@ import TournamentWizardPage from './pages/TournamentWizardPage'
 import TournamentsPage from './pages/TournamentsPage'
 import TournamentDetailPage from './pages/TournamentDetailPage'
 import LeaderboardsPage from './pages/LeaderboardsPage'
+import PlayerProfilePage from './pages/PlayerProfilePage'
+import PlayersPage from './pages/PlayersPage'
 
 function App() {
   return (
@@ -27,6 +29,8 @@ function App() {
           <Route path="/tournaments" element={<TournamentsPage />} />
           <Route path="/tournaments/:id" element={<TournamentDetailPage />} />
           <Route path="/leaderboards" element={<LeaderboardsPage />} />
+          <Route path="/player/:username" element={<PlayerProfilePage />} />
+          <Route path="/players" element={<PlayersPage />} />
         </Route>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
