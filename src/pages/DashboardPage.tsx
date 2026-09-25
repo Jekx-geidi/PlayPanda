@@ -38,8 +38,8 @@ export default function DashboardPage() {
           <article><span>Wins</span><strong>0</strong><small>Results will appear here</small></article>
           <article><span>Current rank</span><strong>—</strong><small>Join an event to compete</small></article>
         </section>
-        <section className="DashboardPage-next" aria-labelledby="next-match-title"><div><p className="DashboardPage-kicker">NEXT MATCH</p><h2 id="next-match-title">No upcoming matches</h2><p>New matches will appear here once you register and the schedule is published.</p></div><Link className="DashboardPage-primary" to="/">Browse tournaments</Link></section>
-        <section className="DashboardPage-grid"><article id="events"><h2>My events</h2><p>You are not registered in an active tournament.</p><Link to="/">Browse tournaments</Link></article><article id="schedule"><h2>Recent results</h2><p>Your completed matches and results will appear here.</p></article><article id="standings"><h2>Announcements</h2><p>No announcements for your events.</p></article></section>
+        <section className="DashboardPage-next" aria-labelledby="next-match-title"><div><p className="DashboardPage-kicker">NEXT MATCH</p><h2 id="next-match-title">No upcoming matches</h2><p>New matches will appear here once you register and the schedule is published.</p></div><Link className="DashboardPage-primary" to="/tournaments">Browse tournaments</Link></section>
+        <section className="DashboardPage-grid"><article id="events"><h2>My events</h2><p>You are not registered in an active tournament.</p><Link to="/tournaments">Browse tournaments</Link></article><article id="schedule"><h2>Recent results</h2><p>Your completed matches and results will appear here.</p></article><article id="standings"><h2>Announcements</h2><p>No announcements for your events.</p></article></section>
       </main>
     </div>
   )

@@ -12,6 +12,10 @@ import TermsPage from './pages/TermsPage'
 import PrivacyPage from './pages/PrivacyPage'
 import DashboardPage from './pages/DashboardPage'
 import ParticipantRoute from './routes/ParticipantRoute'
+import AdminTournamentsPage from './pages/AdminTournamentsPage'
+import TournamentWizardPage from './pages/TournamentWizardPage'
+import TournamentsPage from './pages/TournamentsPage'
+import TournamentDetailPage from './pages/TournamentDetailPage'
 
 function App() {
   return (
@@ -19,6 +23,8 @@ function App() {
       <Routes>
         <Route element={<MarketingLayout />}>
           <Route path="/" element={<HomePage />} />
+          <Route path="/tournaments" element={<TournamentsPage />} />
+          <Route path="/tournaments/:id" element={<TournamentDetailPage />} />
         </Route>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
@@ -29,6 +35,22 @@ function App() {
           element={
             <ProtectedRoute role="admin">
               <AdminPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/tournaments"
+          element={
+            <ProtectedRoute role="admin">
+              <AdminTournamentsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/tournaments/:id"
+          element={
+            <ProtectedRoute role="admin">
+              <TournamentWizardPage />
             </ProtectedRoute>
           }
         />

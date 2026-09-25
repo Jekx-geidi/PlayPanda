@@ -98,3 +98,31 @@
   .AdminPage-table td { display: flex; justify-content: space-between; gap: 12px; border: none; padding: 6px 16px; white-space: normal; }
   .AdminPage-table td::before { content: attr(data-label); font-size: 12px; opacity: 0.6; }
 }
+
+.AdminPage-nav { display: flex; gap: 4px; margin-right: auto; margin-left: 24px; }
+.AdminPage-navLink {
+  padding: 8px 14px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+}
+.AdminPage-navLink:hover { color: var(--color-text-primary); }
+.AdminPage-navLink.is-active { color: var(--color-primary); background: hsla(150, 60%, 50%, 0.1); }
+
+.AdminPage-titleRow { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 24px; }
+.AdminPage-titleRow .AdminPage-title { margin-bottom: 0; }
+a.AdminPage-btn { text-decoration: none; display: inline-flex; align-items: center; }
+.AdminPage-btn--danger { background: none; color: hsl(0, 90%, 72%); border-color: hsla(0, 80%, 60%, 0.5); }
+.AdminPage-link { color: var(--color-primary); font-weight: 600; }
+
+.StatusPill { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+.StatusPill--draft { background: hsla(38, 92%, 50%, 0.14); color: var(--color-status-pending); }
+.StatusPill--published { background: hsla(142, 70%, 45%, 0.14); color: var(--color-success); }
+.StatusPill--private { background: hsla(0, 0%, 60%, 0.14); color: var(--color-text-secondary); }
+
+@media (max-width: 720px) {
+  .AdminPage-header { flex-wrap: wrap; }
+  .AdminPage-nav { order: 3; width: 100%; margin: 0; overflow-x: auto; }
+}

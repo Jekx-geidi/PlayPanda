@@ -1,9 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useAuth } from '../context/AuthContext'
 import { listRegistrations, type RegistrationRecord } from '../lib/account'
 import { USER_TYPES, type UserType } from '../lib/userTypes'
-import logo from '../assets/logo.svg'
-import './AdminPage.css'
+import AdminShell from '../components/admin/AdminShell'
 
 const TYPE_LABEL = Object.fromEntries(USER_TYPES.map((t) => [t.value, t.label])) as Record<
   UserType,
@@ -21,7 +19,6 @@ function formatDate(iso: string) {
 }
 
 export default function AdminPage() {
-  const { session, signOut } = useAuth()
   const [records, setRecords] = useState<RegistrationRecord[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -67,18 +64,7 @@ export default function AdminPage() {
   }, [records])
 
   return (
-    <div className="AdminPage">
-      <header className="AdminPage-header">
-        <img src={logo} alt="PlayPanda" className="AdminPage-logo" />
-        <div className="AdminPage-headerRight">
-          <span className="AdminPage-user">{session?.user.email}</span>
-          <button type="button" className="AdminPage-btn AdminPage-btn--outline" onClick={signOut}>
-            Log Out
-          </button>
-        </div>
-      </header>
-
-      <main className="AdminPage-main">
+    <AdminShell>
         <p className="AdminPage-eyebrow"># Admin Dashboard</p>
         <h1 className="AdminPage-title">Registration Forms</h1>
 
@@ -161,7 +147,6 @@ export default function AdminPage() {
             </p>
           )}
         </div>
-      </main>
-    </div>
+    </AdminShell>
   )
 }

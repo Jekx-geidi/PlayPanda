@@ -7,9 +7,9 @@ import './Header.css'
 const NAV_LINKS = [
   { label: 'Home', href: '/' },
   { label: 'About Us', href: '#about' },
-  { label: 'Tournaments', href: '#tournaments' },
-  { label: 'Sports', href: '#sports' },
-  { label: 'E-Sports', href: '#sports' },
+  { label: 'Tournaments', href: '/tournaments' },
+  { label: 'Sports', href: '/tournaments?category=sports' },
+  { label: 'E-Sports', href: '/tournaments?category=esports' },
 ]
 
 export default function Header() {
@@ -24,9 +24,15 @@ export default function Header() {
           <ul className="Header-navList">
             {NAV_LINKS.map((link) => (
               <li key={link.label}>
-                <a href={link.href} className="Header-navLink" onClick={() => setNavOpen(false)}>
-                  {link.label}
-                </a>
+                {link.href.startsWith('/') ? (
+                  <Link to={link.href} className="Header-navLink" onClick={() => setNavOpen(false)}>
+                    {link.label}
+                  </Link>
+                ) : (
+                  <a href={link.href} className="Header-navLink" onClick={() => setNavOpen(false)}>
+                    {link.label}
+                  </a>
+                )}
               </li>
             ))}
           </ul>

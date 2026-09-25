@@ -14,14 +14,20 @@ Dependencies: verify migrations 0001–0003 and current auth behavior first.
 Files: roles/account helpers, ProtectedRoute, App, new participant pages/tests.
 - [x] Existing Google user with a completed account reaches `/dashboard`; incomplete account reaches registration; elevated users retain their routes (route logic; live auth still needs verification).
 - [x] Participant dashboard has truthful empty/loading/error states and mobile bottom navigation per UIS 24 (empty/loading/permission states implemented; remote data remains next slice).
-- [ ] Test all role redirects and real Google sign-in; user_type never grants admin/scorer access.
+- [~] Test all role redirects and real Google sign-in; user_type never grants admin/scorer access.
+  - Done 2026-09-25: route tests for every redirect (logged-out, unregistered, participant, admin/scorer kept out of /dashboard) and all four user_type values denied /admin (`src/routes/ParticipantRoute.test.tsx`). Email/password sign-in + Create Account added on /login; registered participants now land on /dashboard (PRD 5). Live anon REST probe returns 0 rows from `profiles`/`user_accounts` (RLS holding). Migration 0003 applied by the user.
+  - Remaining: a real signed-in browser pass (Google + email) through /login → /register → /dashboard and an admin → /admin.
 
 ## 2. Tournament draft and public browse
 Dependencies: 1; split schema/API, draft UI, publish/public browse into separate increments.
 Files: new Supabase migration, generated database types, tournament service, admin/public pages.
-- [ ] Persist drafts; nine-step wizard supports Back, Save Draft, Continue and review, including all PRD 7 fields.
-- [ ] Validate dates, category/game, division, entry type, format, scoring and registration before publish; enforce admin writes in database.
-- [ ] Public can browse/filter published visible tournaments, open details without login; drafts/private data remain inaccessible through direct API requests.
+- [~] Persist drafts; nine-step wizard supports Back, Save Draft, Continue and review, including all PRD 7 fields.
+  - Code complete 2026-09-25: `supabase/migrations/0004_create_tournaments.sql`, `src/lib/tournaments.ts`, `/admin/tournaments` list + `/admin/tournaments/:id` (`new` for create) wizard with all nine steps, Back/Save Draft/Continue, review with per-step problems and Edit links, publish/unpublish/delete-draft. Cover image is an https URL field (no upload/storage yet).
+  - **Blocked on applying 0004** — live probe on 2026-09-25 returned PGRST205 (table missing). Not yet exercised against the real database.
+- [~] Validate dates, category/game, division, entry type, format, scoring and registration before publish; enforce admin writes in database.
+  - `validateForPublish()` (15 unit tests) mirrored by the `tournaments_publish_requires_setup` CHECK constraint; admin-only insert/update/delete RLS. Needs live verification after 0004: anon/participant insert+update must fail, publishing an incomplete row via REST must fail.
+- [~] Public can browse/filter published visible tournaments, open details without login; drafts/private data remain inaccessible through direct API requests.
+  - `/tournaments` (category tabs, sport filter, search, skeleton/empty/error+retry) and `/tournaments/:id`; header Tournaments/Sports/E-Sports and dashboard CTAs now link there. RLS: anon/authenticated read only `status='published' and visibility='public'`. Needs the live direct-API check after 0004.
 
 ## 3. Event registration and roster approval
 Dependencies: 1–2. Files: entries/roster migration, service, participant/admin pages.

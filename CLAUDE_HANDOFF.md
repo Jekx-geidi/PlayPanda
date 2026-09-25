@@ -1,6 +1,6 @@
 # Start here: TournaSite / PlayPanda continuation
 
-Updated 2026-09-25. **The full platform is unfinished.** This is an implementation
+Updated 2026-09-25 (session 3). **The full platform is unfinished.** This is an implementation
 starter and a continuation package, not a production-ready tournament system.
 
 ## User request and sources
@@ -49,57 +49,66 @@ as authority: server identity, audit time, atomic writes and concurrency checks
 are required before exposing scoring. Revision increments alone do not prevent
 concurrent overwrite; the server must compare the expected stored revision.
 
+## Session 3 (2026-09-25, later) — what changed
+
+1. **Committed the formerly-uncommitted auth work** (the "pre-existing" list
+   below is now in git as `feat: email/password auth, login-gated
+   registration form, admin forms list`). It was authored earlier in the same
+   user conversation, not by an unknown party.
+2. **Task 1 routing finished in code:** registered participants go to
+   `/dashboard` (was `/`). Dashboard shows the `user_accounts.display_name`.
+   New `src/routes/ParticipantRoute.test.tsx` covers every redirect and proves
+   all four `user_type` values are denied `/admin`.
+3. **Task 2 code-complete, not live-verified:**
+   - `supabase/migrations/0004_create_tournaments.sql` — table, publish CHECK
+     constraint (mirrors `validateForPublish`), admin-only writes, public read
+     of published+public only, `updated_at` trigger. **Not applied yet.**
+   - `src/lib/tournaments.ts` — PRD 3 sport/game lists with scoring families
+     and defaults, draft model, validation, row mapping, data access.
+   - `/admin/tournaments` list; `/admin/tournaments/new` and `/:id` nine-step
+     wizard (UIS 21: stepper on desktop, progress bar + one step on mobile,
+     Back/Save Draft/Continue always shown, review with Edit links,
+     publish/unpublish/delete draft, beforeunload warning when dirty).
+   - `AdminShell` (`src/components/admin/`) gives /admin pages shared nav.
+   - Public `/tournaments` (category tabs, sport filter, search,
+     skeleton/empty/error+retry) and `/tournaments/:id`. Header nav links
+     Tournaments/Sports/E-Sports there.
+   - `src/test/queryMock.ts` — chainable supabase query mock for page tests.
+
+Verification: `npm test` **10 files / 85 tests passed**; `npm run build` passed
+(existing >500 kB chunk warning); lint exit 0 with only the 3 pre-existing
+set-state-in-effect / fast-refresh warnings. Live anon REST probe: `profiles`
+and `user_accounts` return `[]` (RLS holds); `tournaments` returns PGRST205
+(0004 not applied). No authenticated browser pass was possible
+(agent-browser CLI hung in this environment).
+
+Known limits: cover image is a URL, not an upload; registration-close vs end
+date is compared in local time client-side and UTC in the DB constraint
+(safe for UTC+ zones like PH, can reject near-midnight values in UTC−);
+public detail says event registration isn't available yet (task 3).
+
 ## Current checkout inventory (verified by reading code)
 
 - React 19 / TypeScript / Vite; React Router; Supabase client; Vitest.
-- `/`: marketing page and supplied PlayPanda artwork.
-- `/login`, `/register`, `/terms`, `/privacy`, `/unauthorized` exist.
-- `/register/profile` redirects to `/register` in the local working copy.
-- `/admin`: local account-registration listing/search/filter, not tournament administration.
+- `/`: marketing page. `/tournaments`, `/tournaments/:id`: public browse.
+- `/login`: email/password, Create Account mode, Google. `/register`:
+  logged-in-only registration form (logged-out → `/login`).
+- `/dashboard`: participant shell with truthful empty states.
+- `/admin`: registration-form listing; `/admin/tournaments[/:id]`: wizard.
 - `/scorer`: static no-assigned-matches state, not a scoring workspace.
-- `/dashboard`, public tournament/schedule/live pages and tournament APIs do not exist.
-- `profiles.role` supports admin/scorer only; user_accounts.user_type is business
-  metadata, never an authorization grant. Participant routing is still missing.
-- Migrations 0001/0002 define profiles/accounts; local 0003 allows admin reads of
-  accounts. Application status of these migrations is **not verified here**.
-- Google OAuth integration exists. Historical plan says consent was reached;
-  current end-to-end provider/login/database behavior was not verified here.
+- `profiles.role` = admin/scorer authorization; `user_accounts.user_type` is
+  business metadata only, never an authorization grant.
+- Migrations: 0001–0003 applied by the user (0003 confirmed 2026-09-25);
+  **0004 must be applied next** (SQL Editor, paste whole file).
 
-## Pre-existing uncommitted work: preserve it
+## Next steps, in order
 
-These were already dirty before this session and were not authored or committed
-by this session. A fresh remote clone may not contain them. The companion source
-ZIP includes their current local contents so Claude can continue accurately.
-
-Modified: `src/App.tsx`, `src/context/AuthContext.tsx`, `src/lib/account.ts`,
-`src/lib/database.types.ts`, `src/pages/AdminPage.tsx`, `src/pages/LoginPage.css`,
-`src/pages/LoginPage.test.tsx`, `src/pages/LoginPage.tsx`,
-`src/pages/RegisterPage.test.tsx`, `src/pages/RegisterPage.tsx`.
-
-Deleted locally: `src/pages/ProfileSetupPage.tsx`,
-`src/pages/ProfileSetupPage.test.tsx`.
-
-Untracked before this session: `src/pages/AdminPage.css`,
-`src/pages/AdminPage.test.tsx`,
-`supabase/migrations/0003_admin_read_user_accounts.sql`.
-
-Do not reset, overwrite or stage all of these as part of an unrelated task.
-Historical registration notes conflict with the newer local implementation;
-inspect current code/tests before changing it.
-
-## Verification from this session
-
-- RED: focused test initially failed because the new match module did not exist.
-- GREEN: `npm test` — 6 test files, **48 tests passed**, including 18 new cases.
-- `npm run build` — TypeScript and Vite passed; existing bundle exceeded 500 kB warning threshold.
-- `npm run lint` — exit 0, two warnings in existing AuthContext/ProtectedRoute.
-- After the dashboard slice, `npm test` — 6 test files, **48 tests passed**;
-  `npm run build` passed; lint exits 0 with the existing AuthContext warning
-  plus the same set-state-in-effect pattern in the new route guard. No live
-  authenticated browser check was possible from this session.
-- No browser UI changes were made; no new browser, real-account, realtime or
-  deployed database validation is claimed. Test/build results cover the current
-  local checkout, including its pre-existing edits, not necessarily a fresh clone.
+1. Apply 0004. Then verify live via REST with the anon key: insert → 401/403,
+   select returns only published+public; as admin, publish an incomplete row
+   via REST → CHECK violation.
+2. Browser pass: admin creates → saves → publishes a tournament; it appears
+   logged-out on `/tournaments`; a private or draft one does not.
+3. Tick task 2 in `tasks/todo.md`, then start task 3 (event registration).
 
 ## Run and continue
 
