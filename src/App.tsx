@@ -19,7 +19,11 @@ import TournamentDetailPage from './pages/TournamentDetailPage'
 import LeaderboardsPage from './pages/LeaderboardsPage'
 import PlayerProfilePage from './pages/PlayerProfilePage'
 import PlayersPage from './pages/PlayersPage'
+import MyProfileRedirect from './pages/MyProfileRedirect'
+import ProfileEditPage from './pages/ProfileEditPage'
+import ChallengesPage from './pages/ChallengesPage'
 import PlayerTimelinePage from './pages/PlayerTimelinePage'
+import MatchSharePage from './pages/MatchSharePage'
 
 function App() {
   return (
@@ -32,7 +36,11 @@ function App() {
           <Route path="/leaderboards" element={<LeaderboardsPage />} />
           <Route path="/player/:username" element={<PlayerProfilePage />} />
           <Route path="/players" element={<PlayersPage />} />
+          <Route path="/profile" element={<MyProfileRedirect />} />
+          <Route path="/profile/edit" element={<ProfileEditPage />} />
+          <Route path="/challenges" element={<ChallengesPage />} />
           <Route path="/player/:username/timeline" element={<PlayerTimelinePage />} />
+          <Route path="/matches/:id/share" element={<MatchSharePage />} />
         </Route>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
