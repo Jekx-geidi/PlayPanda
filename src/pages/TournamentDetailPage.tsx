@@ -132,6 +132,9 @@ export default function TournamentDetailPage() {
           <p className="Tournaments-muted Tournaments-note">
             Online event registration isn&apos;t available on PlayPanda yet.
           </p>
+          <Link to={`/tournaments/${id}/court`} className="HexBtn HexBtn--outline">
+            Open tournament court
+          </Link>
         </section>
       </div>
     </div>
