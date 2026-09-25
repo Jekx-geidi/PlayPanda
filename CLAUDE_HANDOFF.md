@@ -87,6 +87,31 @@ date is compared in local time client-side and UTC in the DB constraint
 (safe for UTC+ zones like PH, can reject near-midnight values in UTC−);
 public detail says event registration isn't available yet (task 3).
 
+## Player social layer (2026-09-25, from Player_Profile_Social_Proposal.md)
+
+Migration `0006_player_social.sql` is **applied live** (REST probe 2026-09-25:
+`player_profiles`, `follows`, `challenges`, `search_players`,
+`get_player_profile`, `get_follow_list` all respond). Built:
+- `/players` discover (search, sport, skill, available-to-play) via masked
+  `search_players`; `/player/:username` real profile with tabs, follow/unfollow,
+  followers/following lists (when allowed), share link, challenge form.
+- `/profile` → own profile or create form; `/profile/edit` identity, sports,
+  skill, availability and the four privacy settings from the proposal.
+- `/challenges` received/sent with accept/decline/cancel (DB trigger enforces
+  who may set which status; column grants block editing anything else).
+- Privacy is enforced in SQL: tables are owner-only under RLS, everyone else
+  reads through security-definer functions that mask followers-only fields;
+  email/phone never leave `user_accounts`.
+Not built (needs official match results, tasks 5–8): stats, match history,
+head-to-head, achievements, activity feed, team/tournament follow, rematch.
+Known limit: follows are auto-accepted, so "followers only" means "must follow
+first", not "must be approved". Follow requests would be a separate slice.
+
+**Two sessions have been committing in this same checkout at once** — one
+committed another's half-written files and pushed an `App.tsx` importing
+files that weren't committed yet. Check `git status` and `git log` before
+every commit, and don't `git add -A`.
+
 ## Current checkout inventory (verified by reading code)
 
 The leaderboard specifications are preserved in `docs/specifications/Leaderboard_PRD.md`,

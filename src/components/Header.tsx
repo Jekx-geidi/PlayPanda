@@ -10,6 +10,7 @@ const NAV_LINKS = [
   { label: 'Tournaments', href: '/tournaments' },
   { label: 'Sports', href: '/tournaments?category=sports' },
   { label: 'E-Sports', href: '/tournaments?category=esports' },
+  { label: 'Players', href: '/players' },
 ]
 
 export default function Header() {

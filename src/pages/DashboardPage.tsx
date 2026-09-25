@@ -6,7 +6,7 @@ import './DashboardPage.css'
 
 const navItems = [
   ['Dashboard', '#dashboard'], ['My Events', '#events'], ['My Schedule', '#schedule'],
-  ['My Team / Entry', '#entry'], ['Brackets', '#brackets'], ['Standings', '#standings'],
+  ['My Team / Entry', '#entry'], ['Brackets', '#brackets'], ['Standings', '#standings'], ['My Profile', '/profile'], ['Challenges', '/challenges'],
 ]
 
 export default function DashboardPage() {
@@ -27,7 +27,7 @@ export default function DashboardPage() {
     <div className="DashboardPage">
       <aside className="DashboardPage-sidebar" aria-label="Participant navigation">
         <Link to="/" className="DashboardPage-brand">PLAY<span>PANDA</span></Link>
-        <nav>{navItems.map(([label, href], index) => <a className={index === 0 ? 'is-active' : ''} href={href} key={label}>{label}</a>)}</nav>
+        <nav>{navItems.map(([label, href], index) => href.startsWith('/') ? <Link to={href} key={label}>{label}</Link> : <a className={index === 0 ? 'is-active' : ''} href={href} key={label}>{label}</a>)}</nav>
         <button type="button" className="DashboardPage-signout" onClick={signOut}>Log out</button>
       </aside>
       <main className="DashboardPage-main" id="dashboard">

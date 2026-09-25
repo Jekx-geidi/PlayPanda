@@ -1,0 +1,43 @@
+.Challenges { max-width: 880px; margin: 0 auto; padding: 44px 6% 80px; color: var(--color-text-primary); }
+.Challenges-back { color: var(--color-primary); text-decoration: none; }
+.Challenges h1 { margin: 20px 0 6px; font-size: clamp(1.8rem, 4vw, 2.6rem); }
+.Challenges-lead, .Challenges-muted { color: var(--color-text-secondary); }
+.Challenges-lead { max-width: 600px; }
+
+.Challenges-tabs { display: inline-flex; gap: 4px; margin: 24px 0 16px; padding: 4px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 999px; }
+.Challenges-tabs button { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 18px; border: none; border-radius: 999px; background: none; color: var(--color-text-secondary); font: inherit; font-weight: 700; cursor: pointer; }
+.Challenges-tabs button.is-active { background: var(--color-primary); color: var(--color-bg); }
+.Challenges-badge { min-width: 20px; padding: 0 6px; border-radius: 999px; background: var(--color-warning); color: var(--color-bg); font-size: .75rem; line-height: 20px; }
+
+.Challenges-error { padding: 10px 14px; border-radius: var(--radius-md); background: hsla(0, 80%, 50%, .12); color: hsl(0, 90%, 82%); }
+.Challenges-error button { background: none; border: none; color: inherit; text-decoration: underline; font: inherit; cursor: pointer; }
+
+.Challenges-empty { padding: 48px 20px; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface); text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.Challenges-empty h2 { margin: 0; }
+.Challenges-empty p { color: var(--color-text-secondary); margin: 0 0 8px; }
+
+.Challenges-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.Challenges-card { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; padding: 18px 20px; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface); }
+.Challenges-cardMain { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.Challenges-cardMain h2 { margin: 6px 0 0; font-size: 1.1rem; }
+.Challenges-cardMain p { margin: 0; }
+.Challenges-cardMain a { color: var(--color-primary); font-weight: 700; text-decoration: none; }
+.Challenges-format { color: var(--color-text-secondary); font-weight: 400; }
+.Challenges-when { font-weight: 700; }
+.Challenges-card blockquote { margin: 6px 0 0; padding-left: 10px; border-left: 2px solid var(--color-border); color: var(--color-text-secondary); overflow-wrap: anywhere; }
+
+.Challenges-status { align-self: flex-start; padding: 3px 10px; border-radius: 999px; font-size: .75rem; font-weight: 800; letter-spacing: .5px; text-transform: uppercase; }
+.Challenges-status--pending { background: hsla(38, 92%, 50%, .14); color: var(--color-status-pending); }
+.Challenges-status--accepted { background: hsla(142, 70%, 45%, .14); color: var(--color-success); }
+.Challenges-status--declined { background: hsla(0, 80%, 50%, .12); color: hsl(0, 90%, 75%); }
+.Challenges-status--cancelled { background: hsla(0, 0%, 60%, .14); color: var(--color-text-secondary); }
+
+.Challenges-actions { display: flex; align-items: center; gap: 8px; }
+.Challenges-actions button,
+.Challenges-primary { display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px; border: 1px solid var(--color-primary); border-radius: var(--radius-md); background: none; color: var(--color-primary); font: inherit; font-weight: 700; text-decoration: none; cursor: pointer; }
+.Challenges .Challenges-primary { background: var(--color-primary); color: var(--color-bg); }
+.Challenges-actions button:disabled { opacity: .55; cursor: wait; }
+
+@media (max-width: 720px) {
+  .Challenges { padding: 28px 16px 64px; }
+}
