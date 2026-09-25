@@ -1,5 +1,30 @@
 # Plan: PlayPanda Login + Register Pages (identity-auth slice)
 
+## TournaSite continuation — 2026-09-25
+
+The new full-platform specifications are preserved in `docs/specifications/`.
+See `CLAUDE_HANDOFF.md` for current evidence and `tasks/todo.md` for the ordered
+implementation plan. Historical notes below describe earlier auth work, not
+the current deployed database state. The current local registration/auth edits
+also supersede parts of the older profile-setup description below.
+
+Architecture: retain React/Vite, Supabase, current PlayPanda assets and existing
+auth. Add tournament features in vertical slices: participant access, tournament
+creation/browse, registration/approval, schedule/assignment, scoring/realtime,
+then confirmed results/brackets/standings. Reuse existing design tokens.
+The new pure match contract is tested but is not wired to routes or persistence.
+Server authorization, transactional audit writes and optimistic concurrency
+must precede production scoring. Do not treat client role checks as security.
+
+Open product choices: brand rename, tie/overtime rules per sport, tournament
+timezone, tournament-level versus global admin scope, bracket correction policy
+after a downstream match has started. Retain existing branding and global
+admin model provisionally; resolve the remaining choices before dependent work.
+
+Risks: preserve the pre-existing dirty worktree; verify deployed migrations
+instead of trusting historical notes; keep registration metadata separate from
+privileged roles; prevent concurrent score overwrite and duplicate advancement.
+
 Source: `../../PLAYPANDA_LOGIN_PAGE.md` (copied to `docs/PLAYPANDA_LOGIN_PAGE.md`) and
 `../../PLAYPANDA_REGISTER_PAGE.md`.
 
