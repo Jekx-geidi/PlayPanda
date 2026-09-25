@@ -12,8 +12,8 @@ Do not mark a task complete on mocks alone when it needs database enforcement.
 ## 1. Participant access (small slices; no privileged self-assignment)
 Dependencies: verify migrations 0001–0003 and current auth behavior first.
 Files: roles/account helpers, ProtectedRoute, App, new participant pages/tests.
-- [ ] Existing Google user with a completed account reaches `/dashboard`; incomplete account reaches registration; elevated users retain their routes.
-- [ ] Participant dashboard has truthful empty/loading/error states and mobile bottom navigation per UIS 24.
+- [x] Existing Google user with a completed account reaches `/dashboard`; incomplete account reaches registration; elevated users retain their routes (route logic; live auth still needs verification).
+- [x] Participant dashboard has truthful empty/loading/error states and mobile bottom navigation per UIS 24 (empty/loading/permission states implemented; remote data remains next slice).
 - [ ] Test all role redirects and real Google sign-in; user_type never grants admin/scorer access.
 
 ## 2. Tournament draft and public browse

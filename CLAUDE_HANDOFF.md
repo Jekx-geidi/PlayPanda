@@ -29,6 +29,11 @@ retained the current brand/assets; a rename has not been applied.
    reason-required admin reopening. It returns a new state, incremented revision
    and independent before/after audit snapshots.
 3. Added this handoff, the ordered checklist and a plan addendum.
+4. Added `/dashboard` with a participant-only route guard and responsive
+   dashboard shell. It shows truthful empty states for events, schedule,
+   results and announcements, and a mobile navigation layout. The route checks
+   `profiles.role` first, then requires a `user_accounts` row; elevated roles
+   are rejected and incomplete accounts return to `/register`.
 
 **The new match module is not imported by any route, is not persisted, and does
 not enforce backend security.** There is no new user-facing functionality yet.
@@ -88,6 +93,10 @@ inspect current code/tests before changing it.
 - GREEN: `npm test` — 6 test files, **48 tests passed**, including 18 new cases.
 - `npm run build` — TypeScript and Vite passed; existing bundle exceeded 500 kB warning threshold.
 - `npm run lint` — exit 0, two warnings in existing AuthContext/ProtectedRoute.
+- After the dashboard slice, `npm test` — 6 test files, **48 tests passed**;
+  `npm run build` passed; lint exits 0 with the existing AuthContext warning
+  plus the same set-state-in-effect pattern in the new route guard. No live
+  authenticated browser check was possible from this session.
 - No browser UI changes were made; no new browser, real-account, realtime or
   deployed database validation is claimed. Test/build results cover the current
   local checkout, including its pre-existing edits, not necessarily a fresh clone.
