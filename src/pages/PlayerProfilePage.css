@@ -71,3 +71,7 @@ button.PlayerProfilePage-count:hover strong { color: var(--color-primary); }
   .PlayerProfilePage-count { align-items: flex-start; }
   .PlayerProfilePage-overview { grid-template-columns: 1fr; }
 }
+
+.PlayerProfilePage .PlayerProfilePage-quiet { border-color: var(--color-border); color: var(--color-text-secondary); }
+.PlayerProfilePage-timeline { display: flex; flex-direction: column; gap: 12px; max-width: 720px; }
+.PlayerProfilePage-timeline > p { margin: 0; }

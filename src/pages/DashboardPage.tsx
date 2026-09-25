@@ -5,7 +5,7 @@ import { getUserAccount } from '../lib/account'
 import './DashboardPage.css'
 
 const navItems = [
-  ['Dashboard', '#dashboard'], ['My Events', '#events'], ['My Schedule', '#schedule'],
+  ['Dashboard', '#dashboard'], ['Feed', '/feed'], ['My Events', '#events'], ['My Schedule', '#schedule'],
   ['My Team / Entry', '#entry'], ['Brackets', '#brackets'], ['Standings', '#standings'], ['My Profile', '/profile'], ['Challenges', '/challenges'],
 ]
 

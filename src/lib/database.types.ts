@@ -2,7 +2,8 @@
 // supabase/migrations/0002_create_user_accounts.sql, and
 // supabase/migrations/0003_admin_read_user_accounts.sql, and
 // supabase/migrations/0004_create_tournaments.sql, and
-// supabase/migrations/0006_player_social.sql.
+// supabase/migrations/0006_player_social.sql, and
+// supabase/migrations/0007_game_timeline.sql.
 // Regenerate for real once the migration is applied:
 //   supabase gen types typescript --project-id hvwamoinowdwqscubeyv > src/lib/database.types.ts
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
@@ -90,6 +91,35 @@ type PlayerCardRow = {
   limited: boolean
 }
 
+type PostAudience = 'public' | 'followers' | 'only_me'
+
+type PostColumns = {
+  id: string
+  author_id: string
+  kind: 'moment' | 'tournament'
+  tournament_id: string | null
+  sport: string | null
+  caption: string
+  hashtags: string[]
+  photo_paths: string[]
+  audience: PostAudience
+  hidden: boolean
+  created_at: string
+  edited_at: string | null
+}
+
+type ReportColumns = {
+  id: string
+  reporter_id: string
+  target_type: 'post' | 'comment' | 'user'
+  target_id: string
+  reason: 'spam' | 'harassment' | 'inappropriate' | 'impersonation' | 'other'
+  details: string
+  status: 'open' | 'resolved' | 'dismissed'
+  created_at: string
+  resolved_at: string | null
+}
+
 export type Database = {
   public: {
     Tables: {
@@ -166,6 +196,38 @@ export type Database = {
         Update: never
         Relationships: []
       }
+      posts: {
+        Row: PostColumns
+        Insert: Pick<PostColumns, 'author_id'> &
+          Partial<Pick<PostColumns, 'id' | 'kind' | 'tournament_id' | 'sport' | 'caption' | 'audience' | 'photo_paths'>>
+        Update: Partial<Pick<PostColumns, 'caption' | 'audience' | 'hidden' | 'sport'>>
+        Relationships: []
+      }
+      post_likes: {
+        Row: { post_id: string; user_id: string; created_at: string }
+        Insert: { post_id: string; user_id: string }
+        Update: never
+        Relationships: []
+      }
+      post_comments: {
+        Row: { id: string; post_id: string; author_id: string; body: string; created_at: string }
+        Insert: { post_id: string; author_id: string; body: string }
+        Update: never
+        Relationships: []
+      }
+      blocks: {
+        Row: { blocker_id: string; blocked_id: string; created_at: string }
+        Insert: { blocker_id: string; blocked_id: string }
+        Update: never
+        Relationships: []
+      }
+      reports: {
+        Row: ReportColumns
+        Insert: Pick<ReportColumns, 'reporter_id' | 'target_type' | 'target_id' | 'reason'> &
+          Partial<Pick<ReportColumns, 'details'>>
+        Update: Pick<ReportColumns, 'status'>
+        Relationships: []
+      }
       challenges: {
         Row: ChallengeColumns
         Insert: Pick<ChallengeColumns, 'challenger_id' | 'opponent_id' | 'sport' | 'proposed_at'> &
@@ -221,6 +283,69 @@ export type Database = {
       player_id_for: {
         Args: { p_username: string }
         Returns: string | null
+      }
+      timeline_posts: {
+        Args: {
+          p_author_username?: string | null
+          p_feed?: boolean
+          p_hashtag?: string | null
+          p_post_id?: string | null
+          p_before?: string | null
+          p_limit?: number
+        }
+        Returns: {
+          id: string
+          author_username: string
+          author_display_name: string
+          author_avatar_url: string | null
+          kind: PostColumns['kind']
+          sport: string | null
+          caption: string
+          hashtags: string[]
+          photo_paths: string[]
+          audience: PostAudience
+          hidden: boolean
+          tournament_id: string | null
+          tournament_name: string | null
+          created_at: string
+          edited_at: string | null
+          like_count: number
+          comment_count: number
+          liked_by_me: boolean
+          is_own: boolean
+        }[]
+      }
+      post_comments_for: {
+        Args: { p_post_id: string }
+        Returns: {
+          id: string
+          author_username: string
+          author_display_name: string
+          author_avatar_url: string | null
+          body: string
+          created_at: string
+          can_delete: boolean
+        }[]
+      }
+      admin_reports: {
+        Args: { p_status?: ReportColumns['status'] }
+        Returns: {
+          id: string
+          target_type: ReportColumns['target_type']
+          target_id: string
+          reason: ReportColumns['reason']
+          details: string
+          status: ReportColumns['status']
+          created_at: string
+          reporter_username: string | null
+          subject_username: string | null
+          snippet: string | null
+          post_id: string | null
+        }[]
+      }
+      is_admin: {
+        Args: Record<string, never>
+        Returns: boolean
       }
       can_view_player: {
         Args: { target: string }

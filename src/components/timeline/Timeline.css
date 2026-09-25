@@ -1,0 +1,116 @@
+.Feed { display: flex; flex-direction: column; gap: 16px; }
+.Feed-state { padding: 44px 20px; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface); text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.Feed-state h2 { margin: 0; }
+.Feed-state p { margin: 0; color: var(--color-text-secondary); max-width: 480px; }
+.Feed-more { align-self: center; min-height: 42px; padding: 0 20px; border: 1px solid var(--color-border); border-radius: 999px; background: var(--color-surface); color: var(--color-text-primary); font: inherit; font-weight: 700; cursor: pointer; }
+
+.Post { position: relative; padding: 18px 20px; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface); display: flex; flex-direction: column; gap: 12px; }
+.Post.is-hidden { border-style: dashed; opacity: .85; }
+.Post--skeleton { min-height: 180px; background: var(--color-surface-alt); }
+.Post-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.Post-author { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.Post-author > span { display: flex; flex-direction: column; min-width: 0; }
+.Post-author a { color: inherit; text-decoration: none; }
+.Post-author strong:hover { color: var(--color-primary); }
+.Post-author small { color: var(--color-text-secondary); font-size: .8rem; }
+.Post-time:hover { text-decoration: underline; }
+
+.Post-menu { position: relative; }
+.Post-menu > button { width: 36px; height: 36px; border: none; border-radius: 50%; background: none; color: var(--color-text-secondary); font-size: 1.2rem; cursor: pointer; }
+.Post-menu > button:hover { background: var(--color-surface-alt); color: var(--color-text-primary); }
+.Post-menu ul { position: absolute; right: 0; top: 40px; z-index: 5; min-width: 200px; list-style: none; margin: 0; padding: 6px; border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface-alt); box-shadow: var(--shadow-card); }
+.Post-menu li button { width: 100%; padding: 10px 12px; border: none; border-radius: var(--radius-sm); background: none; color: var(--color-text-primary); font: inherit; font-size: .9rem; text-align: left; cursor: pointer; }
+.Post-menu li button:hover { background: var(--color-surface); }
+.Post-menu li button.is-danger { color: hsl(0, 90%, 72%); }
+
+.Post-hiddenNote { margin: 0; font-size: .8rem; color: var(--color-status-pending); }
+.Post-kind { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: .85rem; color: var(--color-text-secondary); }
+.Post-kind a { color: var(--color-primary); font-weight: 700; text-decoration: none; }
+.Post-sport { padding: 2px 10px; border-radius: 999px; background: hsla(150, 60%, 50%, .1); color: var(--color-primary); font-weight: 700; }
+.Post-caption { margin: 0; white-space: pre-line; overflow-wrap: anywhere; }
+.Post-tag { color: var(--color-primary); font-weight: 600; text-decoration: none; }
+.Post-tag:hover { text-decoration: underline; }
+
+.Post-photos { margin: 0; }
+.Post-grid { display: grid; gap: 4px; border-radius: var(--radius-md); overflow: hidden; }
+.Post-grid--1 { grid-template-columns: 1fr; }
+.Post-grid--2, .Post-grid--4 { grid-template-columns: 1fr 1fr; }
+.Post-grid--3 { grid-template-columns: 2fr 1fr; grid-template-rows: 1fr 1fr; }
+.Post-grid--3 a:first-child { grid-row: span 2; }
+.Post-grid a { display: block; background: var(--color-bg); }
+.Post-grid img { width: 100%; height: 100%; max-height: 520px; object-fit: cover; display: block; aspect-ratio: 4 / 3; }
+.Post-grid--1 img { aspect-ratio: auto; object-fit: contain; }
+.Post-photos figcaption { margin-top: 6px; font-size: .75rem; color: var(--color-text-secondary); }
+
+.Post-actions { display: flex; gap: 4px; padding-top: 8px; border-top: 1px solid var(--color-border); }
+.Post-actions button, .Post-count { flex: 1; min-height: 40px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: none; border-radius: var(--radius-md); background: none; color: var(--color-text-secondary); font: inherit; font-weight: 700; font-size: .9rem; cursor: pointer; }
+.Post-actions button:hover { background: var(--color-surface-alt); color: var(--color-text-primary); }
+.Post-actions button.is-liked { color: hsl(350, 85%, 65%); }
+.Post-count { cursor: default; }
+
+.Post-comments { display: flex; flex-direction: column; gap: 10px; }
+.Post-comments ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.Post-comment { display: flex; gap: 10px; }
+.Post-comment .Avatar--md { width: 36px; height: 36px; font-size: .8rem; }
+.Post-comment > div { flex: 1; min-width: 0; padding: 8px 12px; border-radius: var(--radius-md); background: var(--color-surface-alt); }
+.Post-comment p { margin: 0; }
+.Post-comment a { color: inherit; text-decoration: none; }
+.Post-commentBody { white-space: pre-line; overflow-wrap: anywhere; }
+.Post-commentActions { display: flex; gap: 10px; margin-top: 4px; }
+.Post-commentActions button { padding: 0; border: none; background: none; color: var(--color-text-secondary); font: inherit; font-size: .75rem; cursor: pointer; }
+.Post-commentForm { display: flex; gap: 8px; }
+.Post-commentForm input { flex: 1; min-height: 40px; padding: 0 12px; border: 1px solid var(--color-border); border-radius: 999px; background: var(--color-bg); color: var(--color-text-primary); font: inherit; }
+
+.Post-primary { display: inline-flex; align-items: center; justify-content: center; min-height: 40px; padding: 0 16px; border: none; border-radius: var(--radius-md); background: var(--color-primary); color: var(--color-bg); font: inherit; font-weight: 800; text-decoration: none; cursor: pointer; }
+.Post-primary:disabled { opacity: .55; cursor: not-allowed; }
+.Post-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.Post-row > button:not(.Post-primary) { min-height: 40px; padding: 0 14px; border: 1px solid var(--color-border); border-radius: var(--radius-md); background: none; color: var(--color-text-primary); font: inherit; cursor: pointer; }
+.Post-muted { color: var(--color-text-secondary); font-size: .85rem; margin: 0; }
+.Post-muted a { color: var(--color-primary); }
+.Post-optional { font-weight: 400; opacity: .6; }
+.Post-error { margin: 0; padding: 10px 14px; border-radius: var(--radius-md); background: hsla(0, 80%, 50%, .12); color: hsl(0, 90%, 82%); font-size: .85rem; list-style: none; }
+.Post-notice { margin: 0; padding: 10px 14px; border-radius: var(--radius-md); background: hsla(142, 70%, 45%, .12); color: var(--color-success); font-size: .85rem; overflow-wrap: anywhere; }
+
+.Post-edit, .Post-report { display: flex; flex-direction: column; gap: 10px; }
+.Post-report { padding: 14px; border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface-alt); }
+.Post-report label { display: grid; gap: 6px; font-size: .85rem; font-weight: 700; }
+.Post textarea, .Post select, .Composer textarea, .Composer select { min-height: 40px; padding: 8px 12px; border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-bg); color: var(--color-text-primary); font: inherit; font-weight: 400; }
+.Post textarea:focus-visible, .Post select:focus-visible, .Post input:focus-visible,
+.Composer textarea:focus-visible, .Composer select:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 1px; }
+
+.Composer { padding: 20px; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface); display: flex; flex-direction: column; gap: 12px; }
+.Composer h2 { margin: 0; font-size: 1.1rem; }
+.Composer-kinds { display: flex; flex-wrap: wrap; gap: 8px; border: none; margin: 0; padding: 0; }
+.Composer-kinds label { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 14px; border: 1px solid var(--color-border); border-radius: 999px; font-size: .85rem; font-weight: 700; cursor: pointer; }
+.Composer-kinds label.is-on { border-color: var(--color-primary); background: hsla(150, 60%, 50%, .12); color: var(--color-primary); }
+.Composer-kinds label.is-disabled { opacity: .45; cursor: not-allowed; }
+.Composer-kinds input { accent-color: var(--color-primary); }
+.Composer-note { margin: -4px 0 0; font-size: .8rem; color: var(--color-text-secondary); }
+.Composer-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+.Composer-row label { display: grid; gap: 6px; font-size: .8rem; font-weight: 700; color: var(--color-text-secondary); }
+.Composer-caption textarea { width: 100%; resize: vertical; }
+.Composer-tags { margin: -4px 0 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.Composer-tags span { color: var(--color-primary); font-size: .85rem; font-weight: 600; }
+.Composer-previews { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.Composer-previews li { position: relative; width: 88px; height: 88px; border-radius: var(--radius-md); overflow: hidden; background: var(--color-bg); display: grid; place-items: center; font-size: .7rem; }
+.Composer-previews img { width: 100%; height: 100%; object-fit: cover; }
+.Composer-previews button { position: absolute; top: 4px; right: 4px; width: 24px; height: 24px; border: none; border-radius: 50%; background: hsla(0, 0%, 0%, .7); color: #fff; cursor: pointer; }
+.Composer-actions { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.Composer-photoBtn { display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; border: 1px dashed var(--color-border); border-radius: var(--radius-md); font-size: .85rem; font-weight: 700; cursor: pointer; }
+.Composer-photoBtn:focus-within { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.Composer-photoBtn.is-disabled { opacity: .5; cursor: not-allowed; }
+
+.TimelinePage { max-width: 720px; margin: 0 auto; padding: 44px 16px 80px; color: var(--color-text-primary); display: flex; flex-direction: column; gap: 20px; }
+.TimelinePage-back { color: var(--color-primary); text-decoration: none; }
+.TimelinePage-kicker { margin: 0; color: var(--color-primary); font-size: .72rem; letter-spacing: .12em; font-weight: 800; }
+.TimelinePage h1 { margin: 4px 0 6px; font-size: clamp(1.8rem, 4vw, 2.6rem); overflow-wrap: anywhere; }
+.TimelinePage-lead { margin: 0; color: var(--color-text-secondary); }
+.TimelinePage-links { display: flex; flex-wrap: wrap; gap: 10px; }
+.TimelinePage-links a { color: var(--color-primary); font-weight: 700; text-decoration: none; }
+.TimelinePage-note { display: flex; flex-wrap: wrap; gap: 8px; padding: 14px 16px; border-radius: var(--radius-md); background: var(--color-surface); border: 1px solid var(--color-border); color: var(--color-text-secondary); font-size: .85rem; }
+.TimelinePage-note strong { color: var(--color-text-primary); }
+
+@media (max-width: 600px) {
+  .Post, .Composer { padding: 14px; }
+  .TimelinePage { padding-top: 28px; }
+}

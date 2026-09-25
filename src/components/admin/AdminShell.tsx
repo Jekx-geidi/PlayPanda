@@ -7,6 +7,7 @@ import '../../pages/AdminPage.css'
 const NAV = [
   { to: '/admin', label: 'Registrations', end: true },
   { to: '/admin/tournaments', label: 'Tournaments', end: false },
+  { to: '/admin/reports', label: 'Reports', end: false },
 ]
 
 /** Header + section nav shared by every /admin page. */

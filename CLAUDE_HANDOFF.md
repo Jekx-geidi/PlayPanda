@@ -112,6 +112,28 @@ committed another's half-written files and pushed an `App.tsx` importing
 files that weren't committed yet. Check `git status` and `git log` before
 every commit, and don't `git add -A`.
 
+## Game Timeline (2026-09-25, from Player_Game_Timeline_Proposal.md)
+
+Migration `0007_game_timeline.sql` — **NOT applied yet** (live probe: `posts`
+returns PGRST205). It creates posts, likes, comments, blocks, reports, the
+private `post-photos` Storage bucket and its policies. Built on top of it:
+- Composer: game-moment or tournament post, optional sport, caption with
+  #hashtags (extracted by a DB trigger), up to 5 JPG/PNG/WEBP photos
+  (downscaled to 1600px client-side), audience Public/Followers/Only Me.
+- `PostCard`: hashtag links, "Photos uploaded by …" (never "verified"),
+  Like/Comment/Share, ⋯ menu (own: edit/hide/delete; others: report/block).
+- `/player/:username/timeline` (replaces the shell), Timeline tab on the
+  profile, `/feed` (you + people you follow), `/hashtag/:tag`, `/post/:id`,
+  `/admin/reports` moderation queue (remove/resolve/dismiss). Block/Unblock on
+  profiles.
+- Privacy in SQL: `post_visible()` is shared by RLS, the read RPCs and the
+  Storage select policy, so a followers-only post's photos can't be fetched
+  by URL either. Blocking hides posts and comments both ways.
+Not built (needs verified matches): "Share this match?" prompt, match-result
+posts with the official match card, achievement/champion posts, opponent
+tagging/mentions and their notifications. The composer shows "Match result"
+disabled with a note. No account suspension for reported users yet.
+
 ## Current checkout inventory (verified by reading code)
 
 The leaderboard specifications are preserved in `docs/specifications/Leaderboard_PRD.md`,

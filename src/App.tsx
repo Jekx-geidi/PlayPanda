@@ -24,6 +24,10 @@ import ProfileEditPage from './pages/ProfileEditPage'
 import ChallengesPage from './pages/ChallengesPage'
 import PlayerTimelinePage from './pages/PlayerTimelinePage'
 import MatchSharePage from './pages/MatchSharePage'
+import FeedPage from './pages/FeedPage'
+import HashtagPage from './pages/HashtagPage'
+import PostPage from './pages/PostPage'
+import AdminReportsPage from './pages/AdminReportsPage'
 
 function App() {
   return (
@@ -41,6 +45,9 @@ function App() {
           <Route path="/challenges" element={<ChallengesPage />} />
           <Route path="/player/:username/timeline" element={<PlayerTimelinePage />} />
           <Route path="/matches/:id/share" element={<MatchSharePage />} />
+          <Route path="/feed" element={<FeedPage />} />
+          <Route path="/hashtag/:tag" element={<HashtagPage />} />
+          <Route path="/post/:id" element={<PostPage />} />
         </Route>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
@@ -75,6 +82,14 @@ function App() {
           element={
             <ProtectedRoute role="scorer">
               <ScorerPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/reports"
+          element={
+            <ProtectedRoute role="admin">
+              <AdminReportsPage />
             </ProtectedRoute>
           }
         />

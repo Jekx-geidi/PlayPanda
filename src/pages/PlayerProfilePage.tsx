@@ -2,6 +2,8 @@ import { useEffect, useState, type FormEvent } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import Avatar from '../components/social/Avatar'
+import PostFeed from '../components/timeline/PostFeed'
+import { isBlocked, setBlocked } from '../lib/timeline'
 import {
   PROFILE_SPORTS,
   SKILL_LABEL,
@@ -18,12 +20,12 @@ import {
 } from '../lib/players'
 import './PlayerProfilePage.css'
 
-const TABS = ['Overview', 'Matches', 'Tournaments', 'Teams', 'Stats', 'Achievements'] as const
+const TABS = ['Overview', 'Matches', 'Timeline', 'Stats', 'Tournaments', 'Teams', 'Achievements'] as const
 type Tab = (typeof TABS)[number]
 
 // Until official match results exist (tasks 5–8), these tabs have no data to
 // show. Say so plainly instead of inventing numbers.
-const PENDING_TAB_COPY: Record<Exclude<Tab, 'Overview'>, { title: string; text: string }> = {
+const PENDING_TAB_COPY: Record<Exclude<Tab, 'Overview' | 'Timeline'>, { title: string; text: string }> = {
   Matches: { title: 'No verified matches yet', text: 'Match history appears once official tournament and challenge results are recorded.' },
   Tournaments: { title: 'No tournaments yet', text: 'Tournaments this player enters will be listed here.' },
   Teams: { title: 'No teams yet', text: 'Teams this player joins will be listed here.' },
@@ -45,6 +47,31 @@ export default function PlayerProfilePage() {
 
   const [list, setList] = useState<{ kind: 'followers' | 'following'; items: FollowListItem[] } | null>(null)
   const [challengeOpen, setChallengeOpen] = useState(false)
+  const [blocked, setBlockedState] = useState(false)
+
+  useEffect(() => {
+    if (!session || !username) return
+    let cancelled = false
+    isBlocked(session, username).then((b) => {
+      if (!cancelled) setBlockedState(b)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [session, username])
+
+  const toggleBlock = async () => {
+    if (!session) return
+    if (!blocked && !window.confirm(`Block @${username}? You won't see each other's posts or comments.`)) return
+    setBusy(true)
+    const { error: blockError } = await setBlocked(session, username, !blocked)
+    setBusy(false)
+    if (blockError) setNotice(blockError)
+    else {
+      setBlockedState(!blocked)
+      setNotice(blocked ? `Unblocked @${username}.` : `Blocked @${username}.`)
+    }
+  }
 
   useEffect(() => {
     let cancelled = false
@@ -170,6 +197,9 @@ export default function PlayerProfilePage() {
                   aria-expanded={challengeOpen} title={p.limited ? 'Follow this player to challenge them' : undefined}>
                   Challenge
                 </button>
+                <button type="button" onClick={toggleBlock} disabled={busy} className="PlayerProfilePage-quiet">
+                  {blocked ? 'Unblock' : 'Block'}
+                </button>
               </>
             ) : (
               <Link to="/login" className="PlayerProfilePage-primary">Log in to follow or challenge</Link>
@@ -241,7 +271,24 @@ export default function PlayerProfilePage() {
             ))}
           </nav>
 
-          {tab === 'Overview' ? (
+          {tab === 'Timeline' ? (
+            <section className="PlayerProfilePage-timeline">
+              <p className="PlayerProfilePage-muted">
+                <Link to={`/player/${p.username}/timeline`} className="PlayerProfilePage-back">
+                  {p.isOwn ? 'Open my timeline to post →' : 'Open full timeline →'}
+                </Link>
+              </p>
+              <PostFeed
+                query={{ authorUsername: p.username }}
+                empty={
+                  <>
+                    <h2>No shared game moments yet</h2>
+                    <p>{p.isOwn ? 'Share your first game moment from your timeline.' : `${p.displayName} hasn’t shared any posts you can see.`}</p>
+                  </>
+                }
+              />
+            </section>
+          ) : tab === 'Overview' ? (
             <section className="PlayerProfilePage-overview">
               <div className="PlayerProfilePage-panel">
                 <h2>About</h2>
