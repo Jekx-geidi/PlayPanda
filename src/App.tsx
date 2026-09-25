@@ -50,6 +50,7 @@ function App() {
           <Route path="/feed" element={<FeedPage />} />
           <Route path="/matches" element={<MatchesPage />} />
           <Route path="/courts" element={<CourtsPage />} />
+          <Route path="/tournaments/:tournamentId/court" element={<CourtsPage />} />
           <Route path="/hashtag/:tag" element={<HashtagPage />} />
           <Route path="/post/:id" element={<PostPage />} />
         </Route>
