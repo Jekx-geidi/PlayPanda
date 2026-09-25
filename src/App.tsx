@@ -29,6 +29,7 @@ import HashtagPage from './pages/HashtagPage'
 import PostPage from './pages/PostPage'
 import AdminReportsPage from './pages/AdminReportsPage'
 import MatchesPage from './pages/MatchesPage'
+import CourtsPage from './pages/CourtsPage'
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
           <Route path="/matches/:id/share" element={<MatchSharePage />} />
           <Route path="/feed" element={<FeedPage />} />
           <Route path="/matches" element={<MatchesPage />} />
+          <Route path="/courts" element={<CourtsPage />} />
           <Route path="/hashtag/:tag" element={<HashtagPage />} />
           <Route path="/post/:id" element={<PostPage />} />
         </Route>

@@ -5,7 +5,7 @@ import './AuthenticatedShell.css'
 
 const links = [
   ['Home', '/'], ['Discover Players', '/players'], ['My Feed', '/feed'],
-  ['Matches', '/matches'], ['Tournaments', '/tournaments'],
+  ['Matches', '/matches'], ['Courts', '/courts'], ['Tournaments', '/tournaments'],
   ['Leaderboards', '/leaderboards'], ['Profile', '/profile'],
 ]
 
