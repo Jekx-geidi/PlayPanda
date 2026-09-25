@@ -1,0 +1,8 @@
+import { Link, useParams } from 'react-router-dom'
+import './PlayerTimelinePage.css'
+
+export default function PlayerTimelinePage() {
+  const { username } = useParams<{ username: string }>()
+  const handle = username ? `@${username}` : '@player'
+  return <main className="PlayerTimelinePage"><Link to={`/player/${username ?? ''}`} className="PlayerTimelinePage-back">← {handle} profile</Link><header><p className="PlayerTimelinePage-kicker">GAME TIMELINE</p><h1>Sports moments, shared by players.</h1><p>Official results stay separate from optional social posts. A verified match card proves the PlayPanda result; uploaded photos remain user media.</p></header><section className="PlayerTimelinePage-composer"><h2>Share a game moment</h2><p>Posting becomes available after a verified match or tournament activity is connected to this profile.</p><div className="PlayerTimelinePage-controls"><button type="button" disabled>Choose match</button><button type="button" disabled>Add photos</button><select disabled aria-label="Post audience"><option>Public</option><option>Followers</option><option>Only me</option></select><button type="button" disabled>Post</button></div></section><section className="PlayerTimelinePage-empty"><div className="PlayerTimelinePage-mark">◎</div><h2>No shared game moments yet</h2><p>When {handle} chooses to share a verified result, the match card, caption, hashtags, and optional photos will appear here.</p><Link to="/players">Discover players</Link></section><aside className="PlayerTimelinePage-note"><strong>Privacy boundary</strong><span>Deleting a timeline post never deletes official match history. Email, phone number, private messages, and exact whereabouts are never shown.</span></aside></main>
+}

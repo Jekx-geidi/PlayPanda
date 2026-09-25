@@ -19,6 +19,7 @@ import TournamentDetailPage from './pages/TournamentDetailPage'
 import LeaderboardsPage from './pages/LeaderboardsPage'
 import PlayerProfilePage from './pages/PlayerProfilePage'
 import PlayersPage from './pages/PlayersPage'
+import PlayerTimelinePage from './pages/PlayerTimelinePage'
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           <Route path="/leaderboards" element={<LeaderboardsPage />} />
           <Route path="/player/:username" element={<PlayerProfilePage />} />
           <Route path="/players" element={<PlayersPage />} />
+          <Route path="/player/:username/timeline" element={<PlayerTimelinePage />} />
         </Route>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
