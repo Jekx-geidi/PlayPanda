@@ -1,15 +1,10 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { supabase } from '../lib/supabase'
-import type { UserType } from '../lib/userTypes'
 
-export interface EmailSignUpDetails {
-  fullName: string
+export interface EmailCredentials {
   email: string
   password: string
-  displayName: string
-  userType: UserType
-  contactNumber?: string
 }
 
 interface AuthContextValue {
@@ -19,7 +14,8 @@ interface AuthContextValue {
   signingUp: boolean
   error: string | null
   signInWithGoogle: (redirectPath?: string) => Promise<void>
-  signUpWithEmail: (details: EmailSignUpDetails) => Promise<{ needsConfirmation: boolean }>
+  signInWithEmail: (credentials: EmailCredentials) => Promise<{ ok: boolean }>
+  signUpWithEmail: (credentials: EmailCredentials) => Promise<{ ok: boolean; needsConfirmation: boolean }>
   signOut: () => Promise<void>
   clearError: () => void
 }
@@ -61,40 +57,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // true until the redirect actually happens.
   }
 
-  // Profile fields go into user_metadata so they survive even when email
-  // confirmation delays the session — RegisterPage reads them back from
-  // session.user.user_metadata once a session finally exists, and creates
-  // the user_accounts row then (see RegisterPage's post-auth effect).
-  const signUpWithEmail = async ({
-    fullName,
-    email,
-    password,
-    displayName,
-    userType,
-    contactNumber,
-  }: EmailSignUpDetails): Promise<{ needsConfirmation: boolean }> => {
+  const signInWithEmail = async ({ email, password }: EmailCredentials) => {
+    setError(null)
+    setSigningIn(true)
+    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password })
+    setSigningIn(false)
+    if (signInError) {
+      setError(signInError.message)
+      return { ok: false }
+    }
+    // onAuthStateChange delivers the new session; LoginPage redirects from there.
+    return { ok: true }
+  }
+
+  // Creating an account is credentials only. The registration form
+  // (/register) is a separate, logged-in-only step that writes the
+  // user_accounts row — see RegisterPage.
+  const signUpWithEmail = async ({ email, password }: EmailCredentials) => {
     setError(null)
     setSigningUp(true)
     const { data, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/register`,
-        data: {
-          full_name: fullName,
-          display_name: displayName,
-          user_type: userType,
-          contact_number: contactNumber || null,
-        },
-      },
+      options: { emailRedirectTo: `${window.location.origin}/login` },
     })
     setSigningUp(false)
 
     if (signUpError) {
       setError(signUpError.message)
-      return { needsConfirmation: false }
+      return { ok: false, needsConfirmation: false }
     }
-    return { needsConfirmation: !data.session }
+    return { ok: true, needsConfirmation: !data.session }
   }
 
   const signOut = async () => {
@@ -112,6 +105,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         signingUp,
         error,
         signInWithGoogle,
+        signInWithEmail,
         signUpWithEmail,
         signOut,
         clearError,

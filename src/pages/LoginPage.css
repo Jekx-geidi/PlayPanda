@@ -79,6 +79,20 @@
 .LoginPage-back { font-size: 13px; margin-top: 20px; }
 .LoginPage-back a { color: var(--color-primary); font-weight: 600; }
 
+.LoginPage-form { text-align: left; }
+.LoginPage-error small { opacity: 0.85; }
+
+.LoginPage-switch {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--color-primary);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.LoginPage-switch:hover { text-decoration: underline; }
+
 @media (max-width: 860px) {
   .LoginPage { padding: 32px 24px; }
   .LoginPage-row { grid-template-columns: 1fr; gap: 32px; text-align: center; }

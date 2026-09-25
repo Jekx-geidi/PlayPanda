@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { getUserAccount } from '../lib/account'
 import './DashboardPage.css'
 
 const navItems = [
@@ -9,7 +11,18 @@ const navItems = [
 
 export default function DashboardPage() {
   const { session, signOut } = useAuth()
-  const name = session?.user.user_metadata?.display_name || session?.user.email?.split('@')[0] || 'Participant'
+  // Email sign-ups carry no display_name in user_metadata; the registration
+  // form's user_accounts row is the source of truth for it.
+  const [displayName, setDisplayName] = useState<string | null>(null)
+  useEffect(() => {
+    if (!session) return
+    let cancelled = false
+    getUserAccount(session).then((account) => {
+      if (!cancelled && account) setDisplayName(account.displayName)
+    })
+    return () => { cancelled = true }
+  }, [session])
+  const name = displayName || session?.user.email?.split('@')[0] || 'Participant'
   return (
     <div className="DashboardPage">
       <aside className="DashboardPage-sidebar" aria-label="Participant navigation">

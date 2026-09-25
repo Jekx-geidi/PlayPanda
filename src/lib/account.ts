@@ -1,5 +1,6 @@
 import type { Session } from '@supabase/supabase-js'
 import { supabase } from './supabase'
+import { dashboardPathForRole, getUserRole } from './roles'
 import type { UserType } from './userTypes'
 
 export type { UserType }
@@ -11,10 +12,16 @@ export interface UserAccount {
   contactNumber?: string
 }
 
+export interface RegistrationRecord extends UserAccount {
+  id: string
+  email: string | null
+  createdAt: string
+}
+
 /**
  * Looks up the caller's public-registration profile from `user_accounts`
  * (see supabase/migrations/0002_create_user_accounts.sql). No row means the
- * user authenticated but never finished registration.
+ * user authenticated but never filled in the registration form.
  */
 export async function getUserAccount(session: Session): Promise<UserAccount | null> {
   const { data, error } = await supabase
@@ -43,6 +50,7 @@ export async function createUserAccount(
 ): Promise<{ error: string | null }> {
   const { error } = await supabase.from('user_accounts').insert({
     id: session.user.id,
+    email: session.user.email ?? null,
     full_name: fullName,
     display_name: displayName,
     user_type: userType,
@@ -52,4 +60,44 @@ export async function createUserAccount(
 
   if (error) return { error: error.message }
   return { error: null }
+}
+
+/**
+ * Where a freshly signed-in user belongs (PRD §5): Admin/Scorer → their
+ * dashboard, registered participant → /dashboard, never registered → the form.
+ */
+export async function postAuthPath(session: Session): Promise<string> {
+  const role = await getUserRole(session)
+  if (role) return dashboardPathForRole(role)
+  const account = await getUserAccount(session)
+  return account ? '/dashboard' : '/register'
+}
+
+/**
+ * Every submitted registration form, newest first. Only returns rows for an
+ * admin — RLS (0003_admin_read_user_accounts.sql) hides everyone else's.
+ */
+export async function listRegistrations(): Promise<{
+  data: RegistrationRecord[]
+  error: string | null
+}> {
+  const { data, error } = await supabase
+    .from('user_accounts')
+    .select('id, email, full_name, display_name, user_type, contact_number, created_at')
+    .order('created_at', { ascending: false })
+
+  if (error) return { data: [], error: error.message }
+
+  return {
+    data: (data ?? []).map((row) => ({
+      id: row.id,
+      email: row.email,
+      fullName: row.full_name,
+      displayName: row.display_name,
+      userType: row.user_type,
+      contactNumber: row.contact_number ?? undefined,
+      createdAt: row.created_at,
+    })),
+    error: null,
+  }
 }
