@@ -1,6 +1,6 @@
 # Start here: TournaSite / PlayPanda continuation
 
-Updated 2026-09-25 (session 3). **The full platform is unfinished.** This is an implementation
+Updated 2026-09-25 (session 4). **The full platform is unfinished.** This is an implementation
 starter and a continuation package, not a production-ready tournament system.
 
 ## User request and sources
@@ -88,6 +88,12 @@ date is compared in local time client-side and UTC in the DB constraint
 public detail says event registration isn't available yet (task 3).
 
 ## Current checkout inventory (verified by reading code)
+
+The leaderboard specifications are preserved in `docs/specifications/Leaderboard_PRD.md`,
+`Leaderboard_UIX.md`, and `Leaderboard_UXS.md`. Public `/leaderboards` now has
+accessible filters and a truthful empty state; `src/lib/leaderboards.ts` provides
+deterministic ranking/tie-break helpers with tests. It has no persisted rows,
+recalculation job, publish/lock workflow, or admin configuration yet.
 
 - React 19 / TypeScript / Vite; React Router; Supabase client; Vitest.
 - `/`: marketing page. `/tournaments`, `/tournaments/:id`: public browse.

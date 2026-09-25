@@ -8,6 +8,7 @@ Do not mark a task complete on mocks alone when it needs database enforcement.
 - [x] Inventory routes, auth, schema and existing uncommitted work.
 - [x] Add a pure two-sided match lifecycle/score/audit contract with tests.
 - [ ] Complete production integration of that contract (tasks 5–7 below).
+- [x] Add public `/leaderboards` shell, filters and truthful empty state; add deterministic ranking engine tests.
 
 ## 1. Participant access (small slices; no privileged self-assignment)
 Dependencies: verify migrations 0001–0003 and current auth behavior first.
@@ -64,6 +65,14 @@ Dependencies: 7. Start with single elimination and round robin; other formats ar
 - [ ] Final results alone advance winners; retries do not duplicate advancement; ties/byes/seeding and correction propagation are explicit and tested.
 - [ ] Reopening cannot silently invalidate a downstream match already in progress; block with a clear resolution path until that policy is implemented.
 - [ ] Bracket supports mobile horizontal scrolling; standings expose only sport-relevant stats and own-entry highlight.
+
+## Leaderboards module (new supplied specs)
+Dependencies: persisted event/match/result model and tasks 5–8.
+- [x] Preserve `docs/specifications/Leaderboard_{PRD,UIX,UXS}.md`.
+- [x] Add pure ranking engine with primary metric, tie-break levels, deterministic ordering and explanation helper.
+- [x] Add public `/leaderboards` UI shell with tournament/category/sport/division filters and honest empty state.
+- [ ] Wire filters to published leaderboard data; display top 3, relevant columns, participant highlight and mobile expansion.
+- [ ] Add server-side recalculation from Final results only, publish/lock states, admin configuration and audited manual overrides.
 
 ## 9. Remaining sport templates
 Dependencies: 5–7. One tested slice per scoring family, not one generic points screen.
