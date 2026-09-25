@@ -3,7 +3,8 @@
 // supabase/migrations/0003_admin_read_user_accounts.sql, and
 // supabase/migrations/0004_create_tournaments.sql, and
 // supabase/migrations/0006_player_social.sql, and
-// supabase/migrations/0007_game_timeline.sql.
+// supabase/migrations/0007_game_timeline.sql, and
+// supabase/migrations/0008_challenge_results.sql.
 // Regenerate for real once the migration is applied:
 //   supabase gen types typescript --project-id hvwamoinowdwqscubeyv > src/lib/database.types.ts
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
@@ -96,8 +97,9 @@ type PostAudience = 'public' | 'followers' | 'only_me'
 type PostColumns = {
   id: string
   author_id: string
-  kind: 'moment' | 'tournament'
+  kind: 'moment' | 'tournament' | 'match'
   tournament_id: string | null
+  match_id: string | null
   sport: string | null
   caption: string
   hashtags: string[]
@@ -118,6 +120,20 @@ type ReportColumns = {
   status: 'open' | 'resolved' | 'dismissed'
   created_at: string
   resolved_at: string | null
+}
+
+type MatchResultValue = 'WIN' | 'LOSS' | 'DRAW'
+type ResultStatus = 'pending' | 'confirmed' | 'disputed'
+
+type SportStatRow = {
+  sport: string
+  matches: number
+  wins: number
+  losses: number
+  draws: number
+  win_rate: number
+  current_streak: number
+  last_played_at: string
 }
 
 export type Database = {
@@ -196,10 +212,26 @@ export type Database = {
         Update: never
         Relationships: []
       }
+      match_results: {
+        Row: {
+          challenge_id: string
+          scores: [number, number][]
+          winner: 'challenger' | 'opponent' | 'draw'
+          played_at: string
+          status: ResultStatus
+          submitted_by: string
+          submitted_at: string
+          confirmed_at: string | null
+          dispute_reason: string
+        }
+        Insert: never
+        Update: never
+        Relationships: []
+      }
       posts: {
         Row: PostColumns
         Insert: Pick<PostColumns, 'author_id'> &
-          Partial<Pick<PostColumns, 'id' | 'kind' | 'tournament_id' | 'sport' | 'caption' | 'audience' | 'photo_paths'>>
+          Partial<Pick<PostColumns, 'id' | 'kind' | 'tournament_id' | 'match_id' | 'sport' | 'caption' | 'audience' | 'photo_paths'>>
         Update: Partial<Pick<PostColumns, 'caption' | 'audience' | 'hidden' | 'sport'>>
         Relationships: []
       }
@@ -278,6 +310,61 @@ export type Database = {
           status: ChallengeStatus
           created_at: string
           responded_at: string | null
+          result_status: ResultStatus | null
+          result: MatchResultValue | null
+          result_score: string | null
+          result_submitted_by_me: boolean | null
+          dispute_reason: string | null
+        }[]
+      }
+      submit_match_result: {
+        Args: { p_challenge_id: string; p_scores: [number, number][]; p_played_at?: string | null }
+        Returns: undefined
+      }
+      confirm_match_result: {
+        Args: { p_challenge_id: string }
+        Returns: undefined
+      }
+      dispute_match_result: {
+        Args: { p_challenge_id: string; p_reason?: string }
+        Returns: undefined
+      }
+      player_match_stats: {
+        Args: { p_username: string }
+        Returns: SportStatRow[]
+      }
+      player_match_history: {
+        Args: { p_username: string; p_limit?: number }
+        Returns: {
+          challenge_id: string
+          sport: string
+          format: string
+          played_at: string
+          result: MatchResultValue
+          score: string
+          opponent_username: string
+          opponent_display_name: string
+        }[]
+      }
+      match_share_data: {
+        Args: { p_challenge_id: string }
+        Returns: {
+          challenge_id: string
+          verification: 'confirmed'
+          player_display_name: string
+          opponent_display_name: string
+          result: MatchResultValue
+          score: string
+          sport: string
+          format: string
+          played_at: string
+          sport_matches: number | null
+          sport_wins: number | null
+          sport_losses: number | null
+          sport_draws: number | null
+          sport_win_rate: number | null
+          current_streak: number | null
+          total_wins: number
         }[]
       }
       player_id_for: {
@@ -313,6 +400,13 @@ export type Database = {
           comment_count: number
           liked_by_me: boolean
           is_own: boolean
+          match_id: string | null
+          match_result: MatchResultValue | null
+          match_score: string | null
+          match_sport: string | null
+          match_format: string | null
+          match_played_at: string | null
+          match_opponent_display_name: string | null
         }[]
       }
       post_comments_for: {

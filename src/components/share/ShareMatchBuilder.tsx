@@ -1,11 +1,108 @@
-import { useMemo, useState } from 'react'
-import { engagementMessage, renderShareCardPng, SHARE_DIMENSIONS, shareFileName, suggestedHashtags, type ShareFormat, type ShareMatch } from '../../lib/matchShare'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { suggestedHashtags, type ShareFormat, type ShareMatch } from '../../lib/matchShare'
+import { ACCEPTED_PHOTO_TYPES } from '../../lib/timeline'
+import ExportShareCard from './ExportShareCard'
+import MatchSharePreview from './MatchSharePreview'
+import {
+  CaptionEditor,
+  EngagementMessage,
+  HashtagEditor,
+  MatchPhotoUploader,
+  MatchStatOverlay,
+  ShareFormatSelector,
+  type SharePhoto,
+} from './ShareControls'
 import './ShareMatchBuilder.css'
 
+function loadImage(file: File): Promise<SharePhoto> {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file)
+    const image = new Image()
+    image.onload = () => resolve({ id: crypto.randomUUID(), name: file.name, url, image, file })
+    image.onerror = () => {
+      URL.revokeObjectURL(url)
+      reject(new Error(`${file.name} couldn’t be opened as an image.`))
+    }
+    image.src = url
+  })
+}
+
+/**
+ * Share Match Builder. `match` (official facts) and the visual choices below
+ * are kept separate: nothing here can change the result, score, opponent,
+ * sport or date.
+ */
 export default function ShareMatchBuilder({ match }: { match: ShareMatch }) {
-  const [format, setFormat] = useState<ShareFormat>('story'); const [caption, setCaption] = useState(''); const [hashtags, setHashtags] = useState(suggestedHashtags(match).join(' ')); const [status, setStatus] = useState<string | null>(null); const [image, setImage] = useState<HTMLImageElement | null>(null)
-  const dimensions = SHARE_DIMENSIONS[format]; const previewStyle = useMemo(() => ({ aspectRatio: `${dimensions.width}/${dimensions.height}`, backgroundImage: image ? `linear-gradient(145deg, rgba(8,13,11,.25), rgba(8,13,11,.88)), url(${image.src})` : undefined }), [dimensions, image])
-  const loadPhoto = (file?: File) => { if (!file) return; const url = URL.createObjectURL(file); const loaded = new Image(); loaded.onload = () => { setImage(loaded); URL.revokeObjectURL(url) }; loaded.src = url }
-  const exportCard = async (share: boolean) => { setStatus('Generating PNG…'); try { const blob = await renderShareCardPng(match, format, { caption, hashtags: hashtags.split(/\s+/).filter(Boolean), showStats: true, image }); const file = new File([blob], shareFileName(match, format), { type: 'image/png' }); if (share && navigator.share && (!navigator.canShare || navigator.canShare({ files: [file] }))) await navigator.share({ title: 'My PlayPanda match', files: [file] }); else { const url = URL.createObjectURL(blob); const link = document.createElement('a'); link.href = url; link.download = file.name; link.click(); URL.revokeObjectURL(url) } setStatus('Share card ready.') } catch (error) { setStatus(error instanceof Error ? error.message : 'Export failed. Try again.') } }
-  return <section className="ShareMatchBuilder"><div className="ShareMatchBuilder-preview-wrap"><div className="ShareMatchBuilder-preview-label">LIVE PREVIEW <span>{dimensions.label}</span></div><div className="ShareMatchBuilder-preview" style={previewStyle}><div><strong>PLAYPANDA</strong><em>{match.result}</em><b>{match.score}</b><span>{match.sport}{match.format ? ` · ${match.format}` : ''}</span><small>{match.player} <i>vs</i> {match.opponent}</small><small>{engagementMessage(match)}</small></div></div></div><div className="ShareMatchBuilder-form"><p className="ShareMatchBuilder-kicker">SHARE YOUR MATCH</p><h1>Build a match story</h1><p className="ShareMatchBuilder-helper">Your match facts are locked to the official result. Personalize the moment around them.</p><p className="ShareMatchBuilder-verified">✓ {match.verification === 'confirmed' ? 'Confirmed Match' : 'Match not verified'}</p><div className="ShareMatchBuilder-detail"><span>Official result</span><strong>{match.result} · {match.score}</strong><small>{match.sport} · {new Date(match.playedAt).toLocaleDateString()}</small></div><label>Game photo<input type="file" accept="image/jpeg,image/png,image/webp" onChange={event => loadPhoto(event.target.files?.[0])} /><small>JPG, PNG or WEBP. Your original file is not changed.</small></label><label>Caption<textarea value={caption} onChange={event => setCaption(event.target.value)} placeholder="What happened in this match?" maxLength={280} /></label><label>Hashtags<input value={hashtags} onChange={event => setHashtags(event.target.value)} /></label><fieldset><legend>Share format</legend><div className="ShareMatchBuilder-format-options">{Object.entries(SHARE_DIMENSIONS).map(([key, option]) => <button type="button" key={key} className={format === key ? 'is-active' : ''} onClick={() => setFormat(key as ShareFormat)}>{option.label}<small>{option.hint}</small></button>)}</div></fieldset><div className="ShareMatchBuilder-actions"><button type="button" className="is-primary" disabled={match.verification !== 'confirmed'} onClick={() => exportCard(false)}>Download PNG</button><button type="button" className="is-secondary" disabled={match.verification !== 'confirmed'} onClick={() => exportCard(true)}>Share</button></div>{status && <p role="status" className="ShareMatchBuilder-status">{status}</p>}</div></section>
+  const [format, setFormat] = useState<ShareFormat>('story')
+  const [photos, setPhotos] = useState<SharePhoto[]>([])
+  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [loadingPhoto, setLoadingPhoto] = useState(false)
+  const [photoError, setPhotoError] = useState<string | null>(null)
+  const [caption, setCaption] = useState('')
+  const suggestions = useMemo(() => suggestedHashtags(match), [match])
+  const [hashtags, setHashtags] = useState<string[]>(suggestions)
+  const [showStats, setShowStats] = useState(true)
+
+  // Release object URLs only when a photo is removed or the builder closes.
+  const urls = useRef(new Set<string>())
+  useEffect(() => {
+    const current = urls.current
+    return () => current.forEach((u) => URL.revokeObjectURL(u))
+  }, [])
+
+  const addPhotos = async (files: File[]) => {
+    const bad = files.find((f) => !ACCEPTED_PHOTO_TYPES.includes(f.type))
+    if (bad) {
+      setPhotoError(`${bad.name}: photos must be JPG, PNG or WEBP.`)
+      return
+    }
+    setPhotoError(null)
+    setLoadingPhoto(true)
+    try {
+      const loaded = await Promise.all(files.map(loadImage))
+      loaded.forEach((p) => urls.current.add(p.url))
+      setPhotos((list) => [...list, ...loaded])
+      if (!selectedId && loaded[0]) setSelectedId(loaded[0].id)
+    } catch (e) {
+      setPhotoError(e instanceof Error ? e.message : 'Photo upload failed.')
+    } finally {
+      setLoadingPhoto(false)
+    }
+  }
+
+  const removePhoto = (id: string) => {
+    const gone = photos.find((p) => p.id === id)
+    if (gone) {
+      URL.revokeObjectURL(gone.url)
+      urls.current.delete(gone.url)
+    }
+    setPhotos((list) => list.filter((p) => p.id !== id))
+    if (selectedId === id) setSelectedId(null)
+  }
+
+  const image = photos.find((p) => p.id === selectedId)?.image ?? null
+  const options = useMemo(() => ({ caption, hashtags, showStats, image }), [caption, hashtags, showStats, image])
+
+  return (
+    <section className="ShareBuilder">
+      <div className="ShareBuilder-previewCol">
+        <MatchSharePreview match={match} format={format} options={options} />
+      </div>
+      <div className="ShareBuilder-controls">
+        <MatchStatOverlay match={match} showStats={showStats} onShowStats={setShowStats} />
+        <EngagementMessage match={match} />
+        <MatchPhotoUploader photos={photos} selectedId={selectedId} onAdd={addPhotos} onRemove={removePhoto}
+          onSelect={setSelectedId} loading={loadingPhoto} />
+        {photoError && <p className="ShareBuilder-status ShareBuilder-status--error" role="alert">{photoError}</p>}
+        <section className="ShareBuilder-panel" aria-label="Caption and hashtags">
+          <CaptionEditor value={caption} onChange={setCaption} />
+          <HashtagEditor value={hashtags} suggestions={suggestions} onChange={setHashtags} />
+        </section>
+        <section className="ShareBuilder-panel">
+          <ShareFormatSelector value={format} onChange={setFormat} />
+        </section>
+        <ExportShareCard match={match} format={format} options={options} />
+      </div>
+    </section>
+  )
 }

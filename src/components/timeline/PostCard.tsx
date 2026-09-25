@@ -317,6 +317,23 @@ export default function PostCard({
         </p>
       )}
 
+      {post.match && (
+        <div className={`Post-match Post-match--${post.match.result.toLowerCase()}`} aria-label="Match result">
+          <div className="Post-matchHead">
+            <span>{[post.match.sport, post.match.format].filter(Boolean).join(' · ')}</span>
+            <span className="Post-matchBadge">✓ Confirmed Match</span>
+          </div>
+          <strong className="Post-matchResult">{post.match.result}</strong>
+          <span className="Post-matchScore">{post.match.score}</span>
+          <span className="Post-matchMeta">
+            vs {post.match.opponent} · {new Date(post.match.playedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+          </span>
+        </div>
+      )}
+      {post.kind === 'match' && !post.match && (
+        <p className="Post-muted">The match linked to this post is no longer available.</p>
+      )}
+
       {mode === 'edit' ? (
         <form className="Post-edit" onSubmit={saveEdit}>
           <label className="visually-hidden" htmlFor={`edit-${post.id}`}>Caption</label>

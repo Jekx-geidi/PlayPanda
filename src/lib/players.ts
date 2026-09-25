@@ -330,6 +330,12 @@ export interface Challenge {
   message: string
   status: ChallengeStatus
   createdAt: string
+  /** Casual result state (0008_challenge_results.sql), from my side. */
+  resultStatus: 'pending' | 'confirmed' | 'disputed' | null
+  result: 'WIN' | 'LOSS' | 'DRAW' | null
+  resultScore: string | null
+  resultSubmittedByMe: boolean
+  disputeReason: string
 }
 
 export async function listMyChallenges(): Promise<Result<Challenge[]>> {
@@ -347,6 +353,11 @@ export async function listMyChallenges(): Promise<Result<Challenge[]>> {
       message: r.message,
       status: r.status,
       createdAt: r.created_at,
+      resultStatus: r.result_status,
+      result: r.result,
+      resultScore: r.result_score,
+      resultSubmittedByMe: Boolean(r.result_submitted_by_me),
+      disputeReason: r.dispute_reason ?? '',
     })),
     error: null,
   }

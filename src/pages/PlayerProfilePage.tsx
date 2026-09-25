@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import Avatar from '../components/social/Avatar'
 import PostFeed from '../components/timeline/PostFeed'
+import { MatchHistoryList, SportStatsList, StatsOverview } from '../components/matches/PlayerStats'
 import { isBlocked, setBlocked } from '../lib/timeline'
 import {
   PROFILE_SPORTS,
@@ -25,11 +26,9 @@ type Tab = (typeof TABS)[number]
 
 // Until official match results exist (tasks 5–8), these tabs have no data to
 // show. Say so plainly instead of inventing numbers.
-const PENDING_TAB_COPY: Record<Exclude<Tab, 'Overview' | 'Timeline'>, { title: string; text: string }> = {
-  Matches: { title: 'No verified matches yet', text: 'Match history appears once official tournament and challenge results are recorded.' },
+const PENDING_TAB_COPY: Record<Exclude<Tab, 'Overview' | 'Timeline' | 'Matches' | 'Stats'>, { title: string; text: string }> = {
   Tournaments: { title: 'No tournaments yet', text: 'Tournaments this player enters will be listed here.' },
   Teams: { title: 'No teams yet', text: 'Teams this player joins will be listed here.' },
-  Stats: { title: 'No stats yet', text: 'Per-sport wins, losses, win rate and streaks are calculated from verified final results only.' },
   Achievements: { title: 'No achievements yet', text: 'Achievements are awarded automatically from real match activity.' },
 }
 
@@ -307,10 +306,8 @@ export default function PlayerProfilePage() {
                 </dl>
               </div>
               <div className="PlayerProfilePage-panel">
-                <h2>Overview</h2>
-                <p className="PlayerProfilePage-muted">
-                  Wins, losses, win rate and streaks per sport appear here once verified final results exist.
-                </p>
+                <h2>Record</h2>
+                <StatsOverview username={p.username} />
               </div>
             </section>
           ) : tab === 'Matches' && !p.matchHistoryVisible ? (
@@ -321,6 +318,10 @@ export default function PlayerProfilePage() {
                 {p.isFollowing ? '.' : '. Following them may give you access.'}
               </p>
             </section>
+          ) : tab === 'Matches' ? (
+            <MatchHistoryList username={p.username} />
+          ) : tab === 'Stats' ? (
+            <SportStatsList username={p.username} />
           ) : (
             <section className="PlayerProfilePage-empty" aria-live="polite">
               <div className="PlayerProfilePage-mark" aria-hidden="true">P</div>

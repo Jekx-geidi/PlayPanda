@@ -27,6 +27,16 @@
 .Post-kind { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: .85rem; color: var(--color-text-secondary); }
 .Post-kind a { color: var(--color-primary); font-weight: 700; text-decoration: none; }
 .Post-sport { padding: 2px 10px; border-radius: 999px; background: hsla(150, 60%, 50%, .1); color: var(--color-primary); font-weight: 700; }
+.Post-match { display: flex; flex-direction: column; gap: 2px; padding: 14px 16px; border: 1px solid var(--color-border); border-left: 4px solid var(--color-primary); border-radius: var(--radius-md); background: var(--color-bg); }
+.Post-match--loss { border-left-color: var(--color-danger); }
+.Post-match--draw { border-left-color: #F4B942; }
+.Post-matchHead { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-size: .8rem; font-weight: 700; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: .06em; }
+.Post-matchBadge { color: var(--color-primary); }
+.Post-matchResult { font-family: var(--font-heading); font-size: 1.8rem; line-height: 1.1; color: var(--color-primary); }
+.Post-match--loss .Post-matchResult { color: var(--color-danger); }
+.Post-match--draw .Post-matchResult { color: #F4B942; }
+.Post-matchScore { font-family: var(--font-heading); font-size: 1.3rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.Post-matchMeta { font-size: .85rem; color: var(--color-text-secondary); }
 .Post-caption { margin: 0; white-space: pre-line; overflow-wrap: anywhere; }
 .Post-tag { color: var(--color-primary); font-weight: 600; text-decoration: none; }
 .Post-tag:hover { text-decoration: underline; }

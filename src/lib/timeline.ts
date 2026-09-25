@@ -86,6 +86,8 @@ export function relativeTime(iso: string, now = new Date()): string {
 
 export interface PostDraft {
   kind: PostKind
+  /** Confirmed match (challenge id) for kind 'match'. */
+  matchId?: string
   tournamentId: string
   sport: string
   caption: string
@@ -100,6 +102,7 @@ export function validatePostDraft(d: PostDraft): string[] {
   if (d.photos.length > MAX_PHOTOS) errors.push(`You can add up to ${MAX_PHOTOS} photos.`)
   if (d.photos.some((f) => !ACCEPTED_PHOTO_TYPES.includes(f.type))) errors.push('Photos must be JPG, PNG or WEBP.')
   if (d.kind === 'tournament' && !d.tournamentId) errors.push('Choose the tournament this post is about.')
+  if (d.kind === 'match' && !d.matchId) errors.push('A match post needs its confirmed match.')
   return errors
 }
 
@@ -156,6 +159,16 @@ export interface TimelinePost {
   commentCount: number
   likedByMe: boolean
   isOwn: boolean
+  /** Official card for match posts, from the author's point of view. */
+  match: {
+    id: string
+    result: 'WIN' | 'LOSS' | 'DRAW'
+    score: string
+    sport: string
+    format: string
+    playedAt: string
+    opponent: string
+  } | null
 }
 
 type Result<T> = { data: T; error: string | null }
@@ -212,6 +225,18 @@ export async function listPosts(q: PostQuery): Promise<Result<TimelinePost[]>> {
       commentCount: Number(r.comment_count),
       likedByMe: r.liked_by_me,
       isOwn: r.is_own,
+      match:
+        r.match_id && r.match_result && r.match_score
+          ? {
+              id: r.match_id,
+              result: r.match_result,
+              score: r.match_score,
+              sport: r.match_sport ?? '',
+              format: r.match_format ?? '',
+              playedAt: r.match_played_at ?? r.created_at,
+              opponent: r.match_opponent_display_name ?? '',
+            }
+          : null,
     })),
     error: null,
   }
@@ -250,6 +275,7 @@ export async function createPost(session: Session, d: PostDraft): Promise<Result
     author_id: session.user.id,
     kind: d.kind,
     tournament_id: d.kind === 'tournament' ? d.tournamentId : null,
+    match_id: d.kind === 'match' ? d.matchId : null,
     sport: d.sport.trim() || null,
     caption: d.caption.trim(),
     audience: d.audience,

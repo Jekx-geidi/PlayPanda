@@ -1,0 +1,44 @@
+.Result { flex-basis: 100%; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding-top: 14px; border-top: 1px solid var(--color-border); }
+.Result button,
+.Result .Result-primary { display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px; border: 1px solid var(--color-primary); border-radius: var(--radius-md); background: none; color: var(--color-primary); font: inherit; font-weight: 700; text-decoration: none; cursor: pointer; }
+.Result .Result-primary { background: var(--color-primary); color: var(--color-bg); }
+.Result .Result-danger { border-color: hsla(0, 80%, 60%, .6); color: hsl(0, 90%, 75%); }
+.Result button:disabled { opacity: .55; cursor: not-allowed; }
+.Result-line { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.Result-line strong { font-variant-numeric: tabular-nums; font-size: 1.05rem; }
+.Result-muted, .Result-hint { color: var(--color-text-secondary); font-size: .85rem; margin: 0; }
+.Result-verified { color: var(--color-primary); font-weight: 800; font-size: .85rem; letter-spacing: .04em; text-transform: uppercase; }
+.Result-disputed { color: var(--color-status-pending); font-weight: 800; font-size: .85rem; text-transform: uppercase; }
+.Result-badge { padding: 2px 10px; border-radius: 999px; font-size: .75rem; font-weight: 800; letter-spacing: .06em; }
+.Result-badge--win { background: hsla(150, 60%, 50%, .15); color: var(--color-primary); }
+.Result-badge--loss { background: hsla(0, 80%, 50%, .14); color: hsl(0, 90%, 75%); }
+.Result-badge--draw { background: hsla(40, 88%, 60%, .15); color: #F4B942; }
+.Result-error { margin: 0; padding: 8px 12px; border-radius: var(--radius-md); background: hsla(0, 80%, 50%, .12); color: hsl(0, 90%, 82%); font-size: .85rem; }
+
+.Result-form { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 420px; }
+.Result-rows { display: grid; grid-template-columns: 1fr 1fr 40px; gap: 6px 8px; align-items: center; }
+.Result-colHead { font-size: .75rem; font-weight: 700; color: var(--color-text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.Result-row { display: contents; }
+.Result-row input { min-height: 42px; width: 100%; padding: 0 10px; border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-bg); color: var(--color-text-primary); font: inherit; font-size: 1.05rem; font-variant-numeric: tabular-nums; text-align: center; }
+.Result-row input:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 1px; }
+.Result .Result-row button { min-height: 36px; width: 36px; padding: 0; justify-content: center; border-color: var(--color-border); color: var(--color-text-secondary); }
+.Result-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.Result-preview { font-weight: 700; font-variant-numeric: tabular-nums; }
+.Result-dispute { display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 420px; }
+.Result-dispute label { display: grid; gap: 6px; font-size: .85rem; font-weight: 700; }
+.Result-dispute input { min-height: 40px; padding: 0 12px; border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-bg); color: var(--color-text-primary); font: inherit; font-weight: 400; }
+
+.ShareModal-backdrop { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 16px; background: hsla(150, 20%, 3%, .75); }
+.ShareModal { width: min(400px, 100%); padding: 28px; border: 1px solid var(--color-primary); border-radius: var(--radius-lg); background: var(--color-surface); text-align: center; display: flex; flex-direction: column; gap: 6px; }
+.ShareModal p, .ShareModal h2 { margin: 0; }
+.ShareModal-kicker { color: var(--color-primary); font-size: .75rem; font-weight: 800; letter-spacing: .12em; }
+.ShareModal h2 { font-size: 1.5rem; margin-bottom: 6px; }
+.ShareModal-result { font-family: var(--font-heading); font-size: 3rem; font-weight: 800; line-height: 1; color: var(--color-primary); }
+.ShareModal-result--loss { color: var(--color-danger); }
+.ShareModal-result--draw { color: #F4B942; }
+.ShareModal-score { font-size: 1.4rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.ShareModal-sport, .ShareModal-hint { color: var(--color-text-secondary); font-size: .9rem; }
+.ShareModal-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+.ShareModal-actions a, .ShareModal-actions button { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--radius-md); font: inherit; font-weight: 800; text-decoration: none; cursor: pointer; }
+.ShareModal-primary { background: var(--color-primary); color: var(--color-bg); }
+.ShareModal-actions button { border: 1px solid var(--color-border); background: none; color: var(--color-text-primary); }

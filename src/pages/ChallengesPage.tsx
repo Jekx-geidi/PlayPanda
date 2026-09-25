@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { listMyChallenges, respondToChallenge, type Challenge, type ChallengeStatus } from '../lib/players'
+import ChallengeResultPanel from '../components/matches/ChallengeResultPanel'
+import ShareMatchModal from '../components/share/ShareMatchModal'
+import type { MatchResultValue } from '../lib/matches'
 import './ChallengesPage.css'
 import './StatusPage.css'
 
@@ -31,6 +34,7 @@ export default function ChallengesPage() {
   const [reloadKey, setReloadKey] = useState(0)
   const [busyId, setBusyId] = useState<string | null>(null)
   const [view, setView] = useState<'incoming' | 'outgoing'>('incoming')
+  const [justConfirmed, setJustConfirmed] = useState<{ id: string; result: MatchResultValue; score: string; sport: string } | null>(null)
 
   useEffect(() => {
     if (loading || !session) return
@@ -57,15 +61,20 @@ export default function ChallengesPage() {
   }
 
   const shown = items.filter((c) => c.direction === view)
-  const pendingIncoming = items.filter((c) => c.direction === 'incoming' && c.status === 'pending').length
+  // Things waiting on me: a challenge to answer, or a result to confirm.
+  const needsMe = (c: Challenge) =>
+    (c.direction === 'incoming' && c.status === 'pending') || (c.resultStatus === 'pending' && !c.resultSubmittedByMe)
+  const todo = (dir: 'incoming' | 'outgoing') => items.filter((c) => c.direction === dir && needsMe(c)).length
+  const pendingIncoming = todo('incoming')
+  const pendingOutgoing = todo('outgoing')
 
   return (
     <main className="Challenges">
       <Link to="/profile" className="Challenges-back">← My profile</Link>
       <h1>Challenges</h1>
       <p className="Challenges-lead">
-        Accepted challenges are agreements to play. Recording the result and updating stats comes with
-        official match scoring.
+        After you play an accepted challenge, one of you records the score and the other confirms it.
+        Confirmed results update both players&apos; stats and can be shared.
       </p>
 
       <div className="Challenges-tabs" role="group" aria-label="Challenge direction">
@@ -73,7 +82,7 @@ export default function ChallengesPage() {
           Received{pendingIncoming > 0 && <span className="Challenges-badge">{pendingIncoming}</span>}
         </button>
         <button type="button" aria-pressed={view === 'outgoing'} className={view === 'outgoing' ? 'is-active' : ''} onClick={() => setView('outgoing')}>
-          Sent
+          Sent{pendingOutgoing > 0 && <span className="Challenges-badge">{pendingOutgoing}</span>}
         </button>
       </div>
 
@@ -110,6 +119,9 @@ export default function ChallengesPage() {
                 <p className="Challenges-when">{formatWhen(c.proposedAt)}</p>
                 {c.message && <blockquote>{c.message}</blockquote>}
               </div>
+              {c.status === 'accepted' && (
+                <ChallengeResultPanel challenge={c} onChanged={() => setReloadKey((k) => k + 1)} onConfirmed={setJustConfirmed} />
+              )}
               {c.status === 'pending' && (
                 <div className="Challenges-actions">
                   {view === 'incoming' ? (
@@ -125,6 +137,11 @@ export default function ChallengesPage() {
             </li>
           ))}
         </ul>
+      )}
+
+      {justConfirmed && (
+        <ShareMatchModal challengeId={justConfirmed.id} result={justConfirmed.result} score={justConfirmed.score}
+          sport={justConfirmed.sport} onClose={() => setJustConfirmed(null)} />
       )}
     </main>
   )

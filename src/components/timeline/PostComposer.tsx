@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react'
+import { Link } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { listPublicTournaments, type TournamentSummary } from '../../lib/tournaments'
 import { PROFILE_SPORTS } from '../../lib/players'
@@ -94,13 +95,9 @@ export default function PostComposer({ onPosted }: { onPosted: () => void }) {
             {k === 'moment' ? 'Game moment' : 'Tournament post'}
           </label>
         ))}
-        <label className="is-disabled" title="Available once official match results are recorded">
-          <input type="radio" name="kind" disabled />
-          Match result
-        </label>
       </fieldset>
       <p className="Composer-note">
-        Match-result posts with a verified match card arrive with official match scoring.
+        Match result posts: record and confirm a result in <Link to="/challenges">Challenges</Link>, then choose Share Match.
       </p>
 
       <div className="Composer-row">

@@ -114,8 +114,8 @@ every commit, and don't `git add -A`.
 
 ## Game Timeline (2026-09-25, from Player_Game_Timeline_Proposal.md)
 
-Migration `0007_game_timeline.sql` — **NOT applied yet** (live probe: `posts`
-returns PGRST205). It creates posts, likes, comments, blocks, reports, the
+Migration `0007_game_timeline.sql` — **applied live** (probe 2026-09-25:
+`posts` returns 200). It creates posts, likes, comments, blocks, reports, the
 private `post-photos` Storage bucket and its policies. Built on top of it:
 - Composer: game-moment or tournament post, optional sport, caption with
   #hashtags (extracted by a DB trigger), up to 5 JPG/PNG/WEBP photos
@@ -133,6 +133,31 @@ Not built (needs verified matches): "Share this match?" prompt, match-result
 posts with the official match card, achievement/champion posts, opponent
 tagging/mentions and their notifications. The composer shows "Match result"
 disabled with a note. No account suspension for reported users yet.
+
+## Match results + Share Card (2026-09-25, Match_Share_Card_Implementation_Prompt.md)
+
+User chose **challenge results** as the match data source (no tournament
+match model exists yet). Migration `0008_challenge_results.sql` — **NOT
+applied yet** (probe: `match_results` 404).
+- One player records the score on an accepted challenge; the OTHER confirms or
+  disputes (`submit/confirm/dispute_match_result` RPCs; no direct writes).
+  Confirmed = final, labelled **"Confirmed Match"** — never "Verified", which
+  is reserved for official tournament results.
+- Stats per sport (matches/W/L/D/win rate/streak) and match history from
+  confirmed results only; profile Overview/Matches/Stats tabs are now real.
+  Match history honours `match_history_visibility`.
+- `/matches/:id/share` loads facts from `match_share_data()` by id. The old
+  shell read the match from `location.state`, which let anyone forge a
+  "Verified Match" card — removed; a test proves state is ignored.
+- Builder split per the spec (ShareControls, MatchSharePreview,
+  ExportShareCard, ShareMatchModal). Preview and PNG use the same canvas
+  function; Story/Square/Landscape checked in headless Chrome. Web Share with
+  download fallback. "Post to Timeline" uploads the card as a `match` post
+  (posts.match_id); timeline shows an official match card on such posts.
+- Engagement headline is earned: "EXPERT" needs 10+ matches at 75%+,
+  streak/milestone lines use real counts.
+- Test setup raises the async util timeout to 3s (a Timeline test flaked under
+  full parallel load).
 
 ## Current checkout inventory (verified by reading code)
 
