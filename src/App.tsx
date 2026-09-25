@@ -28,6 +28,7 @@ import FeedPage from './pages/FeedPage'
 import HashtagPage from './pages/HashtagPage'
 import PostPage from './pages/PostPage'
 import AdminReportsPage from './pages/AdminReportsPage'
+import MatchesPage from './pages/MatchesPage'
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
           <Route path="/player/:username/timeline" element={<PlayerTimelinePage />} />
           <Route path="/matches/:id/share" element={<MatchSharePage />} />
           <Route path="/feed" element={<FeedPage />} />
+          <Route path="/matches" element={<MatchesPage />} />
           <Route path="/hashtag/:tag" element={<HashtagPage />} />
           <Route path="/post/:id" element={<PostPage />} />
         </Route>
