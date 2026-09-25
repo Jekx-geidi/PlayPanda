@@ -109,6 +109,9 @@ recalculation job, publish/lock workflow, or admin configuration yet.
 
 ## Next steps, in order
 
+0. Apply 0005 first if not yet done: the live `user_accounts` was created from the
+   original 0002 (no `full_name`/`contact_number`), which broke /register saves.
+   Verified 2026-09-25 by REST column probe.
 1. Apply 0004. Then verify live via REST with the anon key: insert → 401/403,
    select returns only published+public; as admin, publish an incomplete row
    via REST → CHECK violation.
